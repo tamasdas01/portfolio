@@ -1,6 +1,7 @@
 import { IntroSequence } from "@/components/intro/IntroSequence";
 import { Header } from "@/components/ui/Header";
 import { Footer } from "@/components/ui/Footer";
+import { HeroIdentity } from "@/components/sections/HeroIdentity";
 import { Hero } from "@/components/sections/Hero";
 import { Work } from "@/components/sections/Work";
 import { About } from "@/components/sections/About";
@@ -13,6 +14,7 @@ export default function Home() {
       <Header />
 
       <main>
+        <HeroIdentity />
         <Hero />
         <Work />
         <About />
