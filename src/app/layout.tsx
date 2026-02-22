@@ -36,7 +36,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`dark ${sans.variable} ${mono.variable}`}>
-      <body className="bg-bg font-sans text-text-primary antialiased">
+      <body className="font-sans text-text-primary antialiased">
         <IntroProvider>
           <LenisProvider>{children}</LenisProvider>
         </IntroProvider>

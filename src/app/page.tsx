@@ -1,27 +1,36 @@
 import { IntroSequence } from "@/components/intro/IntroSequence";
 import { Header } from "@/components/ui/Header";
 import { Footer } from "@/components/ui/Footer";
+import { DottedSurface } from "@/components/ui/dotted-surface";
 import { HeroIdentity } from "@/components/sections/HeroIdentity";
-import { Hero } from "@/components/sections/Hero";
-import { Work } from "@/components/sections/Work";
-import { About } from "@/components/sections/About";
+import { StatementHero } from "@/components/sections/StatementHero";
+import { ProjectShowcase } from "@/components/sections/ProjectShowcase";
+import { CinematicProcess } from "@/components/sections/CinematicProcess";
+import { MindMap } from "@/components/sections/MindMap";
 import { Contact } from "@/components/sections/Contact";
 
 export default function Home() {
   return (
     <>
-      <IntroSequence />
-      <Header />
+      {/* Fixed Three.js dotted wave background — z-index: 0 */}
+      <DottedSurface />
 
-      <main>
-        <HeroIdentity />
-        <Hero />
-        <Work />
-        <About />
-        <Contact />
-      </main>
+      {/* All page content sits above the dotted surface — z-index: 1 */}
+      <div style={{ position: "relative", zIndex: 1 }}>
+        <IntroSequence />
+        <Header />
 
-      <Footer />
+        <main>
+          <HeroIdentity />
+          <StatementHero />
+          <ProjectShowcase />
+          <CinematicProcess />
+          <MindMap />
+          <Contact />
+        </main>
+
+        <Footer />
+      </div>
     </>
   );
 }

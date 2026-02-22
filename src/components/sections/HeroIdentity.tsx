@@ -115,7 +115,6 @@ export function HeroIdentity({
         <section
             ref={sectionRef}
             className="relative flex min-h-screen items-center justify-center overflow-hidden"
-            style={{ background: "#0a0a0a" }}
         >
             <motion.div
                 style={{ y, opacity, scale }}
