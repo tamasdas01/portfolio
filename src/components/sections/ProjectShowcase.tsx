@@ -6,11 +6,12 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { WORKS } from "@/lib/constants";
 import { ease } from "@/lib/animations";
+import { useIsMobile } from "@/lib/use-mobile";
 
 gsap.registerPlugin(ScrollTrigger);
 
 // ─────────────────────────────────────────────────────────────
-// Project Card with 3D tilt
+// Project Card with 3D tilt (desktop only)
 // ─────────────────────────────────────────────────────────────
 
 const ACCENT_COLORS = [
@@ -30,9 +31,13 @@ function ProjectCard({
     onExpand: () => void;
 }) {
     const cardRef = useRef<HTMLDivElement>(null);
+    const isMobile = useIsMobile();
     const glowColor = ACCENT_COLORS[index % ACCENT_COLORS.length];
 
+    // 3D tilt: desktop only — no-op on mobile (touch triggers mousemove too but
+    // we gate it to prevent wasted GSAP calls)
     const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+        if (isMobile) return; // Mobile: skip entirely
         const card = cardRef.current;
         if (!card) return;
         const rect = card.getBoundingClientRect();
@@ -45,9 +50,10 @@ function ProjectCard({
             duration: 0.4,
             ease: "power2.out",
         });
-    }, []);
+    }, [isMobile]);
 
     const handleMouseLeave = useCallback(() => {
+        if (isMobile) return; // Mobile: skip entirely
         const card = cardRef.current;
         if (!card) return;
         gsap.to(card, {
@@ -56,7 +62,7 @@ function ProjectCard({
             duration: 0.6,
             ease: "expo.out",
         });
-    }, []);
+    }, [isMobile]);
 
     return (
         <motion.div
@@ -64,7 +70,7 @@ function ProjectCard({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.8, ease, delay: index * 0.12 }}
-            style={{ perspective: "800px" }}
+            style={{ perspective: isMobile ? undefined : "800px" }}
         >
             <div
                 ref={cardRef}
@@ -75,12 +81,13 @@ function ProjectCard({
                 style={{
                     background: "rgba(17,17,17,0.8)",
                     borderColor: "rgba(255,255,255,0.06)",
-                    transformStyle: "preserve-3d",
-                    willChange: "transform",
+                    // Desktop: enable 3D transform; mobile: flat (no transform cost)
+                    transformStyle: isMobile ? undefined : "preserve-3d",
+                    willChange: isMobile ? undefined : "transform",
                     backdropFilter: "blur(12px)",
                 }}
             >
-                {/* Glow border on hover */}
+                {/* Glow border on hover (CSS-only, no impact on mobile) */}
                 <div
                     className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
                     style={{
@@ -89,7 +96,7 @@ function ProjectCard({
                 />
 
                 {/* Card content */}
-                <div className="relative z-10 p-8 md:p-10">
+                <div className="relative z-10 p-6 md:p-10">
                     {/* Year badge */}
                     <span
                         className="inline-block rounded-full px-3 py-1 font-mono text-xs"
@@ -205,7 +212,8 @@ function ProjectDetail({
                     ✕
                 </button>
 
-                <div className="p-10 md:p-14">
+                {/* Mobile: tighter padding to prevent overflow */}
+                <div className="p-6 md:p-14">
                     <span
                         className="font-mono text-xs"
                         style={{ color: "rgba(255,255,255,0.3)" }}
@@ -214,7 +222,7 @@ function ProjectDetail({
                     </span>
 
                     <h2
-                        className="mt-4 text-4xl font-light tracking-tight md:text-5xl"
+                        className="mt-4 text-3xl font-light tracking-tight md:text-5xl"
                         style={{ color: "rgba(255,255,255,0.95)" }}
                     >
                         {work.title}

@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import { motion, useInView } from "framer-motion";
 import { ease } from "@/lib/animations";
+import { useIsMobile } from "@/lib/use-mobile";
 
 // ─────────────────────────────────────────────────────────────
 // Node data
@@ -69,10 +70,90 @@ const CONNECTIONS: [number, number][] = [
 ];
 
 // ─────────────────────────────────────────────────────────────
-// Component
+// Mobile: Vertical card list — all content visible on tap
 // ─────────────────────────────────────────────────────────────
 
-export function MindMap() {
+function MindMapMobile() {
+    const sectionRef = useRef<HTMLElement>(null);
+    const isInView = useInView(sectionRef, { once: true, margin: "-60px" });
+
+    return (
+        <section
+            ref={sectionRef}
+            className="relative px-6 py-24"
+        >
+            <div className="mx-auto max-w-xl">
+                {/* Section heading */}
+                <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.6, ease }}
+                    className="font-mono text-sm"
+                    style={{ color: "rgba(255,255,255,0.3)", letterSpacing: "0.15em" }}
+                >
+                    How I Think
+                </motion.p>
+
+                <motion.h2
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.7, ease, delay: 0.1 }}
+                    className="mt-4 text-3xl font-light tracking-tight"
+                    style={{ color: "rgba(255,255,255,0.9)" }}
+                >
+                    A connected mind
+                </motion.h2>
+
+                {/* Vertical card list — all insight text directly visible */}
+                <div className="mt-10 flex flex-col gap-4">
+                    {NODES.map((node, i) => (
+                        <motion.div
+                            key={node.id}
+                            initial={{ opacity: 0, y: 24 }}
+                            animate={isInView ? { opacity: 1, y: 0 } : {}}
+                            transition={{ duration: 0.55, ease, delay: 0.2 + i * 0.08 }}
+                            className="flex items-start gap-4 rounded-2xl border px-5 py-4"
+                            style={{
+                                background: "rgba(17,17,17,0.7)",
+                                borderColor: `${node.color}22`,
+                                backdropFilter: "blur(8px)",
+                            }}
+                        >
+                            {/* Color dot */}
+                            <div
+                                className="mt-1 flex-shrink-0 h-3 w-3 rounded-full"
+                                style={{
+                                    background: node.color,
+                                    boxShadow: `0 0 8px ${node.color}88`,
+                                }}
+                            />
+                            <div>
+                                <p
+                                    className="font-mono text-xs font-medium"
+                                    style={{ color: node.color, letterSpacing: "0.08em" }}
+                                >
+                                    {node.label}
+                                </p>
+                                <p
+                                    className="mt-1 text-sm leading-relaxed"
+                                    style={{ color: "rgba(255,255,255,0.55)" }}
+                                >
+                                    {node.insight}
+                                </p>
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Desktop: Original SVG canvas with hover + mouse parallax
+// ─────────────────────────────────────────────────────────────
+
+function MindMapDesktop() {
     const sectionRef = useRef<HTMLElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
@@ -269,4 +350,14 @@ export function MindMap() {
             </div>
         </section>
     );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Exported component — switches between layouts by screen size
+// ─────────────────────────────────────────────────────────────
+
+export function MindMap() {
+    const isMobile = useIsMobile();
+    // Render mobile card list on small screens, original SVG canvas on desktop
+    return isMobile ? <MindMapMobile /> : <MindMapDesktop />;
 }

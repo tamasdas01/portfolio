@@ -20,9 +20,12 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
 
         const container = containerRef.current;
 
+        // ── Mobile check: reduce particle count and animation cost ──
+        const isMobile = window.innerWidth <= 768;
+
         const SEPARATION = 150;
-        const AMOUNTX = 40;
-        const AMOUNTY = 60;
+        const AMOUNTX = isMobile ? 20 : 40;   // Mobile: 1/4 the particles
+        const AMOUNTY = isMobile ? 30 : 60;   // Mobile: 1/4 the particles
 
         // Scene setup
         const scene = new THREE.Scene();
@@ -38,9 +41,14 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
 
         const renderer = new THREE.WebGLRenderer({
             alpha: true,
-            antialias: true,
+            antialias: !isMobile, // Skip antialiasing on mobile for perf
         });
-        renderer.setPixelRatio(window.devicePixelRatio);
+        // Cap pixel ratio at 1.5 on mobile to avoid GPU overload
+        renderer.setPixelRatio(
+            isMobile
+                ? Math.min(window.devicePixelRatio, 1.5)
+                : window.devicePixelRatio
+        );
         renderer.setSize(window.innerWidth, window.innerHeight);
         // Transparent clear so the dark page bg shows through
         renderer.setClearColor(0x000000, 0);
@@ -85,6 +93,8 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
         scene.add(points);
 
         let count = 0;
+        // Mobile: slower wave animation = lighter RAF workload
+        const countIncrement = isMobile ? 0.05 : 0.1;
 
         // Animation loop
         const animate = () => {
@@ -106,7 +116,7 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
 
             positionAttribute.needsUpdate = true;
             renderer.render(scene, camera);
-            count += 0.1;
+            count += countIncrement;
         };
 
         const handleResize = () => {

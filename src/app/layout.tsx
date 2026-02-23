@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono, Playfair_Display } from "next/font/google";
 import { IntroProvider } from "@/providers/IntroProvider";
 import { LenisProvider } from "@/providers/LenisProvider";
 import "./globals.css";
@@ -14,6 +14,13 @@ const mono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono-var",
   display: "swap",
+});
+
+const display = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-display-var",
+  display: "swap",
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -35,7 +42,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`dark ${sans.variable} ${mono.variable}`}>
+    <html lang="en" className={`dark ${sans.variable} ${mono.variable} ${display.variable}`}>
       <body className="font-sans text-text-primary antialiased">
         <IntroProvider>
           <LenisProvider>{children}</LenisProvider>

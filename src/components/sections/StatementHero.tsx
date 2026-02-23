@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useIntro } from "@/providers/IntroProvider";
+import { useIsMobile } from "@/lib/use-mobile";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -13,6 +15,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 export function StatementHero() {
     const { isIntroComplete } = useIntro();
+    const isMobile = useIsMobile();
     const sectionRef = useRef<HTMLElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const line1Ref = useRef<HTMLSpanElement>(null);
@@ -31,7 +34,7 @@ export function StatementHero() {
         const overlay = overlayRef.current;
         if (!section || !container || !line1 || !line2 || !line3 || !overlay) return;
 
-        // ── Entrance: stagger fade-in ──────────────────────────
+        // ── Entrance: stagger fade-in (runs on both mobile + desktop) ──
         const enterTl = gsap.timeline({ delay: 0.3 });
         enterTl
             .fromTo(
@@ -52,7 +55,7 @@ export function StatementHero() {
                 "-=0.5"
             );
 
-        // ── Scroll-pinned animation ────────────────────────────
+        // ── Desktop only: scroll-pinned cinematic animation ────────────
         const mm = gsap.matchMedia();
 
         mm.add("(min-width: 768px)", () => {
@@ -102,21 +105,9 @@ export function StatementHero() {
                 }, 1.2);
         });
 
-        // Mobile: no pinning, just entrance animation
-        mm.add("(max-width: 767px)", () => {
-            // On mobile just do a subtle parallax fade on scroll
-            gsap.to(container, {
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top top",
-                    end: "bottom top",
-                    scrub: true,
-                },
-                y: -60,
-                opacity: 0,
-                ease: "none",
-            });
-        });
+        // ── Mobile: NO scroll hijacking — entrance animation is enough ──
+        // (The `mm.add("(max-width: 767px)")` scroll fade was removed because
+        //  it was racing with the entrance animation and killing text visibility.)
 
         return () => {
             enterTl.kill();
@@ -132,14 +123,18 @@ export function StatementHero() {
             ref={sectionRef}
             className="relative flex min-h-screen items-center justify-center overflow-hidden"
             style={{
-                perspective: "1200px",
+                // Mobile: no 3D perspective — saves a compositing layer and
+                // avoids any GPU overhead on low-end phones.
+                perspective: isMobile ? undefined : "1200px",
             }}
         >
             <div
                 ref={containerRef}
                 className="relative z-10 flex flex-col items-center gap-0 select-none"
                 style={{
-                    transformStyle: "preserve-3d",
+                    // Mobile: flat layout — preserve-3d is only meaningful with
+                    // the desktop scroll-camera animation.
+                    transformStyle: isMobile ? undefined : "preserve-3d",
                 }}
             >
                 {/* Line 1: "I build" */}
@@ -164,10 +159,14 @@ export function StatementHero() {
                     className="block opacity-0"
                     style={{
                         fontFamily: "var(--font-sans-var), system-ui, sans-serif",
-                        fontSize: "clamp(4rem, 16vw, 14rem)",
+                        // Mobile: slightly smaller to prevent overflow on 375px width
+                        fontSize: isMobile
+                            ? "clamp(3rem, 14vw, 8rem)"
+                            : "clamp(4rem, 16vw, 14rem)",
                         fontWeight: 800,
                         lineHeight: 0.95,
-                        letterSpacing: "-0.03em",
+                        // Mobile: remove tight negative tracking to avoid clipping
+                        letterSpacing: isMobile ? "-0.01em" : "-0.03em",
                         color: "#8B5CF6",
                         textShadow:
                             "0 0 60px rgba(139,92,246,0.3), 0 0 120px rgba(139,92,246,0.15)",
@@ -195,7 +194,7 @@ export function StatementHero() {
                 </span>
             </div>
 
-            {/* Fade-to-black overlay for exit transition */}
+            {/* Fade-to-black overlay for exit transition (desktop scroll only) */}
             <div
                 ref={overlayRef}
                 className="pointer-events-none absolute inset-0 z-20"

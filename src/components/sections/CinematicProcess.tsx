@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import { useIsMobile } from "@/lib/use-mobile";
 
 // ─────────────────────────────────────────────────────────────
 // Layer visuals — rendered as styled divs (no images needed)
@@ -215,6 +216,7 @@ export function CinematicProcess() {
     const [activePhase, setActivePhase] = useState(0);
     const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
     const isVisibleRef = useRef(false);
+    const isMobile = useIsMobile();
 
     // Animate layer transition
     useEffect(() => {
@@ -264,7 +266,12 @@ export function CinematicProcess() {
                     timerRef.current = null;
                 }
             },
-            { threshold: 0.3 }
+            {
+                // Mobile: lower threshold — on small screens the section may be
+                // taller than the viewport so 30% can never be simultaneously
+                // visible.  10% is enough to confirm the user has arrived.
+                threshold: isMobile ? 0.1 : 0.3,
+            }
         );
 
         observer.observe(section);
@@ -273,7 +280,9 @@ export function CinematicProcess() {
             observer.disconnect();
             if (timerRef.current) clearInterval(timerRef.current);
         };
-    }, []);
+        // isMobile is in deps so the observer is recreated with the correct
+        // threshold once useIsMobile resolves on the client (SSR defaults false).
+    }, [isMobile]);
 
     // Progress dots
     const dots = PHASES.map((_, i) => (
@@ -317,7 +326,13 @@ export function CinematicProcess() {
 
             {/* Layers container — fixed height, no pinning */}
             <div className="relative mx-auto mt-12 flex items-center justify-center overflow-hidden md:mt-16"
-                style={{ height: "clamp(380px, 55vh, 550px)" }}
+                style={{
+                    // Mobile: shorter container so it doesn't push below the fold
+                    // on compact phones (SE, Pixel 4a, etc.)
+                    height: isMobile
+                        ? "clamp(300px, 48vh, 420px)"
+                        : "clamp(380px, 55vh, 550px)",
+                }}
             >
                 {/* Layer 1: Wireframe */}
                 <div ref={(el) => { layerRefs.current[0] = el; }} className="absolute inset-0" style={{ opacity: 1 }}>

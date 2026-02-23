@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useIntro } from "@/providers/IntroProvider";
+import { useIsMobile } from "@/lib/use-mobile";
 
 // ─────────────────────────────────────────────────────────────
 // Text-Scramble Effect
@@ -81,6 +82,7 @@ export function HeroIdentity({
     accentColor = "#8B5CF6",
 }: HeroIdentityProps) {
     const { isIntroComplete } = useIntro();
+    const isMobile = useIsMobile();
     const sectionRef = useRef<HTMLElement>(null);
     const [entered, setEntered] = useState(false);
 
@@ -94,16 +96,21 @@ export function HeroIdentity({
     // Text scramble for the name
     const scrambledName = useTextScramble(name, entered, 1000, 600);
 
-    // ── Scroll-based parallax + fade ─────────────────────────
+    // ── Scroll-based parallax + fade (DESKTOP ONLY) ─────────
     const { scrollYProgress } = useScroll({
         target: sectionRef,
         offset: ["start start", "end start"],
     });
 
-    const y = useTransform(scrollYProgress, [0, 1], ["0%", "-30%"]);
-    const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
-    const scale = useTransform(scrollYProgress, [0, 0.8], [1, 0.95]);
+    const yDesktop = useTransform(scrollYProgress, [0, 1], ["0%", "-30%"]);
+    const opacityDesktop = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+    const scaleDesktop = useTransform(scrollYProgress, [0, 0.8], [1, 0.95]);
     const nameBlur = useTransform(scrollYProgress, [0, 0.5], [0, 6]);
+
+    // On mobile: disable all scroll-linked motion values — static display
+    const motionStyle = isMobile
+        ? { y: 0, opacity: 1, scale: 1 }
+        : { y: yDesktop, opacity: opacityDesktop, scale: scaleDesktop };
 
     // Build the accent glow + text-shadow dynamically
     const glowStyle = {
@@ -115,9 +122,22 @@ export function HeroIdentity({
         <section
             ref={sectionRef}
             className="relative flex min-h-screen items-center justify-center overflow-hidden"
+            style={
+                isMobile
+                    ? {
+                          // 100svh = "small viewport height" — excludes the
+                          // browser address-bar on iOS Safari / Chrome Android,
+                          // so the scroll indicator and bottom content are never
+                          // hidden behind the browser chrome.  Falls back to
+                          // min-h-screen (100vh) on browsers that don't support
+                          // the svh unit yet.
+                          minHeight: "100svh",
+                      }
+                    : undefined
+            }
         >
             <motion.div
-                style={{ y, opacity, scale }}
+                style={motionStyle}
                 className="relative z-10 flex flex-col items-center gap-0"
             >
                 {/* "I am" — calm, white, minimal */}
@@ -149,7 +169,8 @@ export function HeroIdentity({
                         fontWeight: 700,
                         lineHeight: 1,
                         letterSpacing: "-0.02em",
-                        filter: useTransformToFilter(nameBlur),
+                        // Mobile: no scroll-blur filter (kills perf + not visible anyway)
+                        filter: isMobile ? undefined : undefined,
                     }}
                 >
                     {entered ? scrambledName : ""}
@@ -163,7 +184,10 @@ export function HeroIdentity({
                     className="mt-6"
                     style={{
                         fontFamily: "var(--font-mono-var), ui-monospace, monospace",
-                        fontSize: "clamp(0.65rem, 1vw, 0.8rem)",
+                        // Mobile: larger so it's actually readable on 375px screens
+                        fontSize: isMobile
+                            ? "clamp(0.75rem, 3vw, 0.9rem)"
+                            : "clamp(0.65rem, 1vw, 0.8rem)",
                         letterSpacing: "0.25em",
                         textTransform: "uppercase",
                         color: "rgba(255,255,255,0.3)",
@@ -177,7 +201,10 @@ export function HeroIdentity({
                     initial={{ opacity: 0 }}
                     animate={entered ? { opacity: 1 } : {}}
                     transition={{ duration: 1, delay: 2.8 }}
-                    className="absolute -bottom-24 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2"
+                    className={`absolute left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 ${
+                        // Mobile: bring indicator up so it's not clipped below viewport
+                        isMobile ? "-bottom-16" : "-bottom-24"
+                        }`}
                 >
                     <span
                         style={{

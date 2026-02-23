@@ -23,7 +23,12 @@ export function Contact() {
                         <div className="mt-8">
                             <a
                                 href={`mailto:${SITE.email}`}
-                                className="group inline-flex items-center gap-3 text-xl text-accent transition-opacity duration-300 hover:opacity-70 md:text-2xl"
+                                className="group inline-flex flex-wrap items-center gap-3 text-lg text-accent transition-opacity duration-300 hover:opacity-70 md:text-xl lg:text-2xl"
+                                style={{
+                                    // Mobile: allow long email addresses to wrap
+                                    // rather than breaking the layout.
+                                    wordBreak: "break-all",
+                                }}
                             >
                                 {SITE.email}
                                 <span className="inline-block transition-transform duration-300 ease-expo group-hover:translate-x-1">
