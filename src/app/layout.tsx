@@ -24,14 +24,12 @@ const display = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Your Name — Designer & Developer",
-  description:
-    "I design and build digital experiences with clarity and intention.",
-  metadataBase: new URL("https://yourname.com"),
+  title: "Tamas Das | Creative Developer",
+  description: "I craft digital experiences with clarity, intention, and zero fluff.",
+  metadataBase: new URL("https://tamasdas.dev"),
   openGraph: {
-    title: "Your Name — Designer & Developer",
-    description:
-      "I design and build digital experiences with clarity and intention.",
+    title: "Tamas Das | Creative Developer",
+    description: "I craft digital experiences with clarity, intention, and zero fluff.",
     type: "website",
   },
 };

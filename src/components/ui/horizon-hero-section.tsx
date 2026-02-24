@@ -351,8 +351,8 @@ export const HorizonHeroSection = ({ onComplete, autoPlay = true }: HorizonHeroS
       if (refs.camera && refs.targetCameraX !== undefined) {
         const smoothingFactor = 0.05;
         smoothCameraPos.current.x += (refs.targetCameraX - smoothCameraPos.current.x) * smoothingFactor;
-        smoothCameraPos.current.y += (refs.targetCameraY - smoothCameraPos.current.y) * smoothingFactor;
-        smoothCameraPos.current.z += (refs.targetCameraZ - smoothCameraPos.current.z) * smoothingFactor;
+        smoothCameraPos.current.y += ((refs.targetCameraY ?? 30) - smoothCameraPos.current.y) * smoothingFactor;
+        smoothCameraPos.current.z += ((refs.targetCameraZ ?? 300) - smoothCameraPos.current.z) * smoothingFactor;
 
         const floatX = Math.sin(time * 0.1) * 2;
         const floatY = Math.cos(time * 0.15) * 1;
