@@ -95,6 +95,125 @@
 }
 
 /* ─────────────────────────────────────────────────────────────
+   Horizon Hero Section
+   ───────────────────────────────────────────────────────────── */
+
+/* Side menu */
+.hhero-side-menu {
+  position: absolute;
+  top: 50%;
+  left: 2rem;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  z-index: 10;
+}
+
+.hhero-menu-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.hhero-menu-icon span {
+  display: block;
+  width: 24px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.hhero-vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: var(--font-mono-var), ui-monospace, monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+}
+
+/* Main hero content */
+.hhero-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 10;
+  pointer-events: none;
+  width: 100%;
+  padding: 0 1rem;
+}
+
+.hhero-title {
+  font-size: clamp(4rem, 15vw, 12rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: #ffffff;
+  text-shadow: 0 0 60px rgba(255, 255, 255, 0.2);
+  margin-bottom: 1.5rem;
+}
+
+.hhero-subtitle {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.hhero-subtitle-line {
+  font-family: var(--font-mono-var), ui-monospace, monospace;
+  font-size: clamp(0.65rem, 1.5vw, 0.9rem);
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+}
+
+/* Scroll indicator */
+.hhero-scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 10;
+}
+
+.hhero-scroll-text {
+  font-family: var(--font-mono-var), ui-monospace, monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  color: rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+}
+
+.hhero-progress-track {
+  width: 120px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+}
+
+.hhero-progress-fill {
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  transition: width 0.1s linear;
+}
+
+.hhero-section-counter {
+  font-family: var(--font-mono-var), ui-monospace, monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* ─────────────────────────────────────────────────────────────
    Mobile-only optimisations  (max-width: 768px)
    Desktop experience is NOT affected by anything below.
    ───────────────────────────────────────────────────────────── */

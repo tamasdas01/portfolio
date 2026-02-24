@@ -1,0 +1,139 @@
+/* horizon-hero.css */
+.hero-container.cosmos-style {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000000;
+  overflow: hidden;
+  z-index: 50;
+}
+
+.hero-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 1;
+}
+
+.side-menu {
+  position: absolute;
+  left: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  z-index: 10;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.menu-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.menu-icon span {
+  width: 20px;
+  height: 1px;
+  background-color: currentColor;
+}
+
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  font-weight: 300;
+}
+
+.hero-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 5;
+  width: 100%;
+  pointer-events: none;
+}
+
+.hero-title {
+  font-family: var(--font-sans, sans-serif);
+  font-size: clamp(4rem, 15vw, 12rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: #ffffff;
+  margin: 0;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+/* For letters if we use split text later */
+.title-char {
+  display: inline-block;
+}
+
+.hero-subtitle {
+  margin-top: 2rem;
+  font-family: var(--font-sans, sans-serif);
+  font-size: clamp(0.9rem, 2vw, 1.2rem);
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  line-height: 1.8;
+}
+
+.scroll-progress {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  z-index: 10;
+}
+
+.scroll-text {
+  font-family: var(--font-mono, monospace);
+  font-size: 9px;
+  letter-spacing: 0.5em;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.progress-track {
+  width: 40px;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #ffffff;
+  transform-origin: left;
+  transition: width 0.3s ease;
+}
+
+.section-counter {
+  font-family: var(--font-mono, monospace);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Hidden sections used for scroll sizing in the original, 
+   but for the intro we'll just auto-cycle */
+.scroll-sections {
+  display: none;
+}

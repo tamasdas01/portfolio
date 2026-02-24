@@ -2,7 +2,7 @@
 
 import { useCallback } from "react";
 import { useIntro } from "@/providers/IntroProvider";
-import { ParticleHeroIntro } from "@/components/ui/particle-hero-intro";
+import { HorizonHeroSection } from "@/components/ui/horizon-hero-section";
 
 export function IntroSequence() {
     const { isIntroComplete, completeIntro } = useIntro();
@@ -14,10 +14,8 @@ export function IntroSequence() {
     if (isIntroComplete) return null;
 
     return (
-        <ParticleHeroIntro
-            words={["Hello"]}
-            particleDensity={3}
-            autoDismissAfter={3000}
+        <HorizonHeroSection
+            autoPlay={true}
             onComplete={handleComplete}
         />
     );
