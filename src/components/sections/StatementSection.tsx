@@ -83,7 +83,7 @@ export function StatementSection() {
                     className="flex flex-col items-center"
                 >
                     {/* Statement lines with stagger */}
-                    <div className="flex flex-col items-center gap-1 md:gap-3">
+                    <div className="flex flex-col items-center gap-0 md:gap-3">
                         {LINES.map((line, i) => (
                             <motion.div
                                 key={line.text}
@@ -112,13 +112,13 @@ export function StatementSection() {
                                         // Responsive font sizing
                                         fontSize: line.emphasis
                                             ? isMobile
-                                                ? "clamp(3rem, 12vw, 4.5rem)"
+                                                ? "clamp(3.5rem, 15vw, 5rem)"
                                                 : "clamp(4rem, 7vw, 6rem)"
                                             : isMobile
-                                                ? "clamp(1.5rem, 6vw, 2.2rem)"
+                                                ? "clamp(1.5rem, 8vw, 2.5rem)"
                                                 : "clamp(2rem, 4vw, 3rem)",
                                         fontWeight: line.emphasis ? 700 : 300,
-                                        lineHeight: 1.1,
+                                        lineHeight: isMobile ? 1.0 : 1.1,
                                         letterSpacing: line.emphasis
                                             ? "-0.02em"
                                             : line.serif

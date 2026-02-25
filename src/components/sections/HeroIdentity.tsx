@@ -112,9 +112,12 @@ export function HeroIdentity({
         ? { y: 0, opacity: 1, scale: 1 }
         : { y: yDesktop, opacity: opacityDesktop, scale: scaleDesktop };
 
-    // Build the accent glow + text-shadow dynamically
-    const glowStyle = {
-        color: accentColor,
+    // Build the accent glow + gradient text dynamically
+    const glowStyle: React.CSSProperties = {
+        background: `linear-gradient(to bottom, #A78BFA, #7C3AED)`,
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
         textShadow: `0 0 40px ${accentColor}44, 0 0 80px ${accentColor}22`,
     };
 
@@ -125,14 +128,14 @@ export function HeroIdentity({
             style={
                 isMobile
                     ? {
-                          // 100svh = "small viewport height" — excludes the
-                          // browser address-bar on iOS Safari / Chrome Android,
-                          // so the scroll indicator and bottom content are never
-                          // hidden behind the browser chrome.  Falls back to
-                          // min-h-screen (100vh) on browsers that don't support
-                          // the svh unit yet.
-                          minHeight: "100svh",
-                      }
+                        // 100svh = "small viewport height" — excludes the
+                        // browser address-bar on iOS Safari / Chrome Android,
+                        // so the scroll indicator and bottom content are never
+                        // hidden behind the browser chrome.  Falls back to
+                        // min-h-screen (100vh) on browsers that don't support
+                        // the svh unit yet.
+                        minHeight: "100svh",
+                    }
                     : undefined
             }
         >
@@ -148,7 +151,7 @@ export function HeroIdentity({
                     className="block font-light tracking-wide"
                     style={{
                         fontFamily: "var(--font-sans-var), system-ui, sans-serif",
-                        fontSize: "clamp(1.1rem, 2.5vw, 2rem)",
+                        fontSize: isMobile ? "1.4rem" : "clamp(1.1rem, 2.5vw, 2rem)",
                         color: "rgba(255,255,255,0.8)",
                         letterSpacing: "0.18em",
                         marginBottom: "0.25em",
@@ -165,32 +168,50 @@ export function HeroIdentity({
                     style={{
                         ...glowStyle,
                         fontFamily: "var(--font-sans-var), system-ui, sans-serif",
-                        fontSize: "clamp(3.5rem, 12vw, 10rem)",
+                        fontSize: isMobile
+                            ? "clamp(4.5rem, 18vw, 6rem)"
+                            : "clamp(3.5rem, 12vw, 10rem)",
                         fontWeight: 700,
                         lineHeight: 1,
                         letterSpacing: "-0.02em",
                         // Mobile: no scroll-blur filter (kills perf + not visible anyway)
                         filter: isMobile ? undefined : undefined,
+                        textAlign: "center"
                     }}
                 >
                     {entered ? scrambledName : ""}
                 </motion.h1>
+
+                {/* Horizontal Divider */}
+                <motion.div
+                    initial={{ opacity: 0, scaleX: 0 }}
+                    animate={entered ? { opacity: 1, scaleX: 1 } : {}}
+                    transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 1.5 }}
+                    style={{
+                        width: isMobile ? '80px' : '120px',
+                        height: '1px',
+                        background: 'rgba(255, 255, 255, 0.1)',
+                        margin: isMobile ? '1.25rem 0 0.75rem 0' : '1.5rem 0 1rem 0'
+                    }}
+                />
 
                 {/* Subtle subtitle — appears after name settles */}
                 <motion.p
                     initial={{ opacity: 0 }}
                     animate={entered ? { opacity: 1 } : {}}
                     transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 2 }}
-                    className="mt-6"
+                    className="mt-4 md:mt-6 px-4 text-center"
                     style={{
                         fontFamily: "var(--font-mono-var), ui-monospace, monospace",
-                        // Mobile: larger so it's actually readable on 375px screens
+                        // Mobile: smaller font to avoid taking up too much space
                         fontSize: isMobile
-                            ? "clamp(0.75rem, 3vw, 0.9rem)"
+                            ? "0.6rem"
                             : "clamp(0.65rem, 1vw, 0.8rem)",
-                        letterSpacing: "0.25em",
+                        letterSpacing: "0.2em",
                         textTransform: "uppercase",
                         color: "rgba(255,255,255,0.3)",
+                        lineHeight: 1.6,
+                        maxWidth: isMobile ? "280px" : "auto"
                     }}
                 >
                     Creative Developer &nbsp;·&nbsp; Crafting digital experiences

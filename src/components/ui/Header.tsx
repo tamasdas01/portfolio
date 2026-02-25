@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useIntro } from "@/providers/IntroProvider";
 import { SITE } from "@/lib/constants";
 import { fadeIn, ease } from "@/lib/animations";
+import { Text_03 } from "@/components/ui/wave-text";
 
 export function Header() {
     const { isIntroComplete } = useIntro();
@@ -15,24 +16,18 @@ export function Header() {
             initial="hidden"
             animate="visible"
             variants={fadeIn}
-            // Mobile: remove mix-blend-difference (causes harsh colour inversion
-            // on some Android WebView layers); use normal opacity transition instead
             className="fixed top-0 left-0 right-0 z-40 md:mix-blend-difference"
         >
             <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 md:px-8 md:py-6">
                 <a
                     href="#"
-                    /* Mobile: slightly smaller mono text */
-                    className="font-mono text-xs text-text-primary transition-opacity duration-300 hover:opacity-60 md:text-sm"
+                    className="font-mono text-xs tracking-widest text-text-primary transition-opacity duration-300 hover:opacity-60 md:text-sm"
                 >
                     {SITE.name}
                 </a>
 
-                <div
-                    /* Mobile: tighter gap + smaller text for thumb-friendly targets */
-                    className="flex items-center gap-5 md:gap-8"
-                >
-                    {["Work", "About", "Contact"].map((item, i) => (
+                <div className="flex items-center gap-5 md:gap-8">
+                    {["WORK", "ABOUT", "CONTACT"].map((item, i) => (
                         <motion.a
                             key={item}
                             href={`#${item.toLowerCase()}`}
@@ -43,10 +38,9 @@ export function Header() {
                                 ease,
                                 delay: 0.1 + i * 0.05,
                             }}
-                            /* Mobile: text-xs for readability; md: restore text-sm */
-                            className="font-mono text-xs text-text-primary transition-opacity duration-300 hover:opacity-60 md:text-sm"
+                            className="font-mono text-xs tracking-widest text-white md:text-gray-400 transition-colors duration-300 hover:text-white md:text-sm"
                         >
-                            {item}
+                            <Text_03 text={item} />
                         </motion.a>
                     ))}
                 </div>

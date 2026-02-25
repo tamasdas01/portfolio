@@ -64,7 +64,7 @@ export const HorizonHeroSection = ({ onComplete, autoPlay = true }: HorizonHeroS
   const subtitles = [
     { line1: "Where vision meets reality,", line2: "we shape the future of tomorrow" },
     { line1: "Beyond the boundaries of imagination,", line2: "lies the universe of possibilities" },
-    { line1: "In the space between thought and creation,", line2: "we find the essence of true innovation" }
+    { line1: "", line2: "" }
   ];
 
   // Initialize Three.js
@@ -548,7 +548,6 @@ export const HorizonHeroSection = ({ onComplete, autoPlay = true }: HorizonHeroS
         <div className="menu-icon">
           <span></span><span></span><span></span>
         </div>
-        <div className="vertical-text">SPACE</div>
       </div>
 
       {/* White flash overlay */}
