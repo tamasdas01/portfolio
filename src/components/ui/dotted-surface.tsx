@@ -2,6 +2,7 @@
 
 import { useIntro } from '@/providers/IntroProvider';
 import React, { useEffect, useRef, useState } from 'react';
+import { useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
 import * as THREE from 'three';
 
 type DottedSurfaceProps = Omit<React.ComponentProps<'div'>, 'ref'>;
@@ -13,6 +14,20 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
     const animationIdRef = useRef(0);
     const [ready, setReady] = useState(false);
 
+    // ── Scroll-driven fade: dim + blur mesh as user scrolls past first viewport ──
+    const [vh, setVh] = useState(800);
+    useEffect(() => { setVh(window.innerHeight); }, []);
+
+    const { scrollY } = useScroll();
+    const scrollOpacity = useTransform(scrollY, [0, vh, vh * 1.8], [1, 0.4, 0.12]);
+    const scrollBlur = useTransform(scrollY, [0, vh, vh * 1.8], [0, 1, 2.5]);
+    const [fadeStyle, setFadeStyle] = useState({ opacity: 1, filter: 'blur(0px)' });
+
+    useMotionValueEvent(scrollOpacity, 'change', (v) => {
+        const blur = scrollBlur.get();
+        setFadeStyle({ opacity: v, filter: `blur(${blur}px)` });
+    });
+
     useEffect(() => {
         // Only initialize once when intro completes
         if (!isIntroComplete || initializedRef.current || !containerRef.current) return;
@@ -23,13 +38,13 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
         // ── Mobile check: reduce particle count and animation cost ──
         const isMobile = window.innerWidth <= 768;
 
-        const SEPARATION = 150;
-        const AMOUNTX = isMobile ? 20 : 40;   // Mobile: 1/4 the particles
-        const AMOUNTY = isMobile ? 30 : 60;   // Mobile: 1/4 the particles
+        const SEPARATION = 200;
+        const AMOUNTX = isMobile ? 15 : 30;
+        const AMOUNTY = isMobile ? 20 : 45;
 
         // Scene setup
         const scene = new THREE.Scene();
-        scene.fog = new THREE.Fog(0x0a0a0a, 2000, 10000);
+        scene.fog = new THREE.Fog(0x000000, 800, 4000);
 
         const camera = new THREE.PerspectiveCamera(
             60,
@@ -67,8 +82,8 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
                 const z = iy * SEPARATION - (AMOUNTY * SEPARATION) / 2;
 
                 positions.push(x, y, z);
-                // White-ish dots for dark background
-                colors.push(200, 200, 200);
+                // Dim dots — typography comes first
+                colors.push(100, 100, 100);
             }
         }
 
@@ -82,10 +97,10 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
         );
 
         const material = new THREE.PointsMaterial({
-            size: 8,
+            size: 5,
             vertexColors: true,
             transparent: true,
-            opacity: 0.8,
+            opacity: 0.45,
             sizeAttenuation: true,
         });
 
@@ -108,8 +123,8 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
                 for (let iy = 0; iy < AMOUNTY; iy++) {
                     const index = i * 3;
                     posArr[index + 1] =
-                        Math.sin((ix + count) * 0.3) * 50 +
-                        Math.sin((iy + count) * 0.5) * 50;
+                        Math.sin((ix + count) * 0.3) * 30 +
+                        Math.sin((iy + count) * 0.5) * 30;
                     i++;
                 }
             }
@@ -162,8 +177,10 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
                 inset: 0,
                 zIndex: 0,
                 pointerEvents: 'none',
-                opacity: ready ? 1 : 0,
-                transition: 'opacity 1s ease',
+                opacity: ready ? fadeStyle.opacity : 0,
+                filter: fadeStyle.filter,
+                transition: ready ? 'opacity 0.15s ease-out, filter 0.15s ease-out' : 'opacity 1s ease',
+                willChange: 'opacity, filter',
             }}
             {...props}
         />

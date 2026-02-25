@@ -49,7 +49,7 @@ export function StatementSection() {
         <section
             ref={sectionRef}
             className="relative flex min-h-screen items-center justify-center overflow-hidden"
-            style={{ background: "#000000" }}
+            style={{ background: "rgba(0, 0, 0, 0.85)" }}
         >
             {/* ── Music-reactive animated background ─────────── */}
             <div className="absolute inset-0 z-0">

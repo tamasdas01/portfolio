@@ -1,376 +1,178 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useIsMobile } from "@/lib/use-mobile";
+import { Accordion05 } from "@/components/ui/Accordion05";
 
-// ─────────────────────────────────────────────────────────────
-// Layer visuals — rendered as styled divs (no images needed)
-// ─────────────────────────────────────────────────────────────
+const ROLES = ["STRATEGIST", "DESIGNER", "DEVELOPER", "STORYTELLER"];
 
-function WireframeLayer() {
+export function CinematicProcess() {
+    const isMobile = useIsMobile();
+    const [currentRole, setCurrentRole] = useState(0);
+
+    // ── Ref-based parallax (zero re-renders) ──────────────────────
+    const parallaxRef = useRef<HTMLDivElement>(null);
+    const target = useRef({ x: 0, y: 0 });
+    const current = useRef({ x: 0, y: 0 });
+    const rafId = useRef<number>(0);
+
+    useEffect(() => {
+        if (isMobile) return;
+
+        const onMove = (e: MouseEvent) => {
+            target.current.x = (e.clientX / window.innerWidth - 0.5) * 16;
+            target.current.y = (e.clientY / window.innerHeight - 0.5) * 16;
+        };
+
+        const tick = () => {
+            current.current.x += (target.current.x - current.current.x) * 0.08;
+            current.current.y += (target.current.y - current.current.y) * 0.08;
+
+            if (parallaxRef.current) {
+                parallaxRef.current.style.transform =
+                    `translate3d(${current.current.x}px,${current.current.y}px,0)`;
+            }
+            rafId.current = requestAnimationFrame(tick);
+        };
+
+        window.addEventListener("mousemove", onMove, { passive: true });
+        rafId.current = requestAnimationFrame(tick);
+
+        return () => {
+            window.removeEventListener("mousemove", onMove);
+            cancelAnimationFrame(rafId.current);
+        };
+    }, [isMobile]);
+
+    // ── Role cycling ──────────────────────────────────────────────
+    useEffect(() => {
+        const id = setInterval(() => {
+            setCurrentRole((p) => (p + 1) % ROLES.length);
+        }, 3000);
+        return () => clearInterval(id);
+    }, []);
+
+    // ── Mobile layout ─────────────────────────────────────────────
+    if (isMobile) {
+        return (
+            <section id="process" className="relative bg-black">
+                <div className="px-6 pt-20 pb-10">
+                    <p className="font-mono text-xs uppercase tracking-[0.3em] text-white/20">
+                        Process
+                    </p>
+                </div>
+                <div className="py-10" style={{ background: '#0e0e0e' }}>
+                    <Accordion05 />
+                </div>
+            </section>
+        );
+    }
+
+    // ── Desktop split-screen ──────────────────────────────────────
     return (
-        <div className="absolute inset-0 flex items-center justify-center">
-            <div className="relative w-full max-w-2xl px-6">
-                {/* Dot grid */}
+        <section id="process" className="relative flex min-h-screen w-full" style={{ background: '#0a0a0a' }}>
+            {/* Left: Sticky Panel (40%) */}
+            <div className="sticky top-0 h-screen w-[40%] bg-black flex flex-col justify-center px-12 overflow-hidden border-r border-white/5">
+                {/* Subtle radial glow – pure CSS, zero cost */}
                 <div
-                    className="absolute inset-0 opacity-20"
+                    className="pointer-events-none absolute inset-0"
                     style={{
-                        backgroundImage:
-                            "radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px)",
-                        backgroundSize: "24px 24px",
+                        background:
+                            "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(139,92,246,0.04) 0%, transparent 70%)",
                     }}
                 />
 
-                {/* Wireframe card */}
+                {/* Parallax container – transformed via ref, never re-renders */}
                 <div
-                    className="relative mx-auto w-full max-w-md rounded-xl border-2 border-dashed p-8"
-                    style={{ borderColor: "rgba(255,255,255,0.15)" }}
+                    ref={parallaxRef}
+                    className="relative z-10"
+                    style={{ willChange: "transform" }}
                 >
-                    {/* Header bar */}
-                    <div className="mb-6 flex items-center gap-3">
-                        <div className="h-3 w-3 rounded-full" style={{ border: "1.5px solid rgba(255,255,255,0.25)" }} />
-                        <div className="h-3 w-3 rounded-full" style={{ border: "1.5px solid rgba(255,255,255,0.25)" }} />
-                        <div className="h-3 w-3 rounded-full" style={{ border: "1.5px solid rgba(255,255,255,0.25)" }} />
-                    </div>
-
-                    {/* Content skeletons */}
-                    <div className="mb-4 h-3 w-3/4 rounded" style={{ background: "rgba(255,255,255,0.1)" }} />
-                    <div className="mb-4 h-3 w-1/2 rounded" style={{ background: "rgba(255,255,255,0.07)" }} />
-                    <div className="mb-8 h-3 w-2/3 rounded" style={{ background: "rgba(255,255,255,0.07)" }} />
-
-                    {/* Button skeleton */}
-                    <div className="h-8 w-28 rounded-lg" style={{ border: "1.5px dashed rgba(255,255,255,0.15)" }} />
-
-                    {/* Label */}
-                    <span
-                        className="absolute -top-3 left-6 px-2 font-mono text-xs"
-                        style={{ color: "rgba(255,255,255,0.3)", background: "#0a0a0a" }}
+                    <motion.p
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.7, delay: 0.05 }}
+                        className="font-mono text-xs uppercase tracking-[0.4em] text-white/25 mb-8"
                     >
-                        wireframe.sketch
-                    </span>
-                </div>
-            </div>
-        </div>
-    );
-}
+                        Process
+                    </motion.p>
 
-function CodeLayer() {
-    return (
-        <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-full max-w-2xl px-6">
-                <div
-                    className="mx-auto w-full max-w-md overflow-hidden rounded-xl border"
-                    style={{
-                        background: "rgba(17,17,17,0.9)",
-                        borderColor: "rgba(255,255,255,0.08)",
-                    }}
-                >
-                    {/* Editor top bar */}
-                    <div
-                        className="flex items-center gap-2 border-b px-4 py-3"
-                        style={{ borderColor: "rgba(255,255,255,0.06)" }}
+                    <motion.h2
+                        initial={{ opacity: 0, y: 24 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{
+                            duration: 0.9,
+                            ease: [0.22, 1, 0.36, 1],
+                            delay: 0.15,
+                        }}
+                        className="text-[clamp(48px,5vw,90px)] font-bold leading-[0.95] tracking-[-0.02em] mb-6"
+                        style={{
+                            background: 'linear-gradient(to bottom, #A78BFA, #7C3AED)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text',
+                        }}
                     >
-                        <div className="h-2.5 w-2.5 rounded-full" style={{ background: "#ff5f57" }} />
-                        <div className="h-2.5 w-2.5 rounded-full" style={{ background: "#febc2e" }} />
-                        <div className="h-2.5 w-2.5 rounded-full" style={{ background: "#28c840" }} />
-                        <span
-                            className="ml-3 font-mono text-xs"
-                            style={{ color: "rgba(255,255,255,0.3)" }}
-                        >
-                            component.tsx
-                        </span>
+                        TAMAS
+                    </motion.h2>
+
+                    {/* Cycling role text */}
+                    <div className="h-14 overflow-hidden relative">
+                        <AnimatePresence mode="wait">
+                            <motion.h3
+                                key={currentRole}
+                                initial={{ y: 16, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                exit={{ y: -16, opacity: 0 }}
+                                transition={{
+                                    duration: 0.5,
+                                    ease: [0.16, 1, 0.3, 1],
+                                }}
+                                className="text-2xl md:text-3xl font-light tracking-[0.12em] text-white/50 uppercase"
+                            >
+                                {ROLES[currentRole]}
+                            </motion.h3>
+                        </AnimatePresence>
                     </div>
 
-                    {/* Code lines */}
-                    <div className="p-5 font-mono text-xs leading-6" style={{ color: "rgba(255,255,255,0.6)" }}>
-                        <div>
-                            <span style={{ color: "#c792ea" }}>const</span>{" "}
-                            <span style={{ color: "#82aaff" }}>Hero</span>{" "}
-                            <span style={{ color: "#89ddff" }}>=</span>{" "}
-                            <span style={{ color: "#c792ea" }}>()</span>{" "}
-                            <span style={{ color: "#89ddff" }}>=&gt;</span>{" "}
-                            <span style={{ color: "#89ddff" }}>{"{"}</span>
-                        </div>
-                        <div className="pl-4">
-                            <span style={{ color: "#c792ea" }}>return</span>{" "}
-                            <span style={{ color: "#89ddff" }}>(</span>
-                        </div>
-                        <div className="pl-8">
-                            <span style={{ color: "#89ddff" }}>&lt;</span>
-                            <span style={{ color: "#f07178" }}>section</span>{" "}
-                            <span style={{ color: "#c792ea" }}>className</span>
-                            <span style={{ color: "#89ddff" }}>=</span>
-                            <span style={{ color: "#c3e88d" }}>&quot;hero&quot;</span>
-                            <span style={{ color: "#89ddff" }}>&gt;</span>
-                        </div>
-                        <div className="pl-12">
-                            <span style={{ color: "#89ddff" }}>&lt;</span>
-                            <span style={{ color: "#ffcb6b" }}>Motion</span>
-                            <span style={{ color: "#89ddff" }}>&gt;</span>
-                            <span style={{ color: "#c3e88d" }}>DIGITAL</span>
-                            <span style={{ color: "#89ddff" }}>&lt;/</span>
-                            <span style={{ color: "#ffcb6b" }}>Motion</span>
-                            <span style={{ color: "#89ddff" }}>&gt;</span>
-                        </div>
-                        <div className="pl-8">
-                            <span style={{ color: "#89ddff" }}>&lt;/</span>
-                            <span style={{ color: "#f07178" }}>section</span>
-                            <span style={{ color: "#89ddff" }}>&gt;</span>
-                        </div>
-                        <div className="pl-4">
-                            <span style={{ color: "#89ddff" }}>)</span>
-                        </div>
-                        <div>
-                            <span style={{ color: "#89ddff" }}>{"}"}</span>
-                        </div>
-                    </div>
+                    {/* Divider */}
+                    <motion.div
+                        initial={{ scaleX: 0 }}
+                        whileInView={{ scaleX: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 1.2, delay: 0.4 }}
+                        className="mt-10 h-px w-20 bg-white/15 origin-left"
+                    />
+
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 0.45 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, delay: 0.5 }}
+                        className="mt-7 max-w-[260px] text-[13px] leading-[1.7] text-white/50 font-light"
+                    >
+                        Bridging perception and reality through intentional
+                        digital architecture.
+                    </motion.p>
+                </div>
+
+                {/* Vertical side label – static, no animation cost */}
+                <div className="absolute right-5 top-1/2 -translate-y-1/2 rotate-180 [writing-mode:vertical-lr] font-mono text-[9px] uppercase tracking-[0.5em] text-white/[0.06] pointer-events-none select-none">
+                    STRATEGY · DESIGN
                 </div>
             </div>
-        </div>
-    );
-}
 
-function FinalUILayer() {
-    return (
-        <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-full max-w-2xl px-6">
-                <div
-                    className="mx-auto w-full max-w-md overflow-hidden rounded-2xl border"
-                    style={{
-                        background: "linear-gradient(135deg, rgba(139,92,246,0.12), rgba(6,182,212,0.08))",
-                        borderColor: "rgba(139,92,246,0.2)",
-                        boxShadow: "0 0 60px rgba(139,92,246,0.1), 0 20px 80px rgba(0,0,0,0.4)",
-                    }}
-                >
-                    <div className="p-8 md:p-10">
-                        <div
-                            className="mb-6 inline-block rounded-full px-3 py-1 font-mono text-xs"
-                            style={{
-                                background: "rgba(139,92,246,0.15)",
-                                color: "rgba(139,92,246,0.8)",
-                            }}
-                        >
-                            Live Component
-                        </div>
-
-                        <h3
-                            className="text-3xl font-light tracking-tight md:text-4xl"
-                            style={{ color: "rgba(255,255,255,0.95)" }}
-                        >
-                            DIGITAL
-                        </h3>
-
-                        <p
-                            className="mt-3 text-sm leading-relaxed"
-                            style={{ color: "rgba(255,255,255,0.45)" }}
-                        >
-                            Polished, animated, ready for production.
-                            Every pixel intentional.
-                        </p>
-
-                        <div className="mt-6 flex gap-3">
-                            <div
-                                className="rounded-full px-5 py-2.5 text-sm font-medium transition-all duration-300"
-                                style={{
-                                    background: "#8B5CF6",
-                                    color: "#ffffff",
-                                    boxShadow: "0 0 20px rgba(139,92,246,0.3)",
-                                }}
-                            >
-                                Explore
-                            </div>
-                            <div
-                                className="rounded-full px-5 py-2.5 text-sm font-medium"
-                                style={{
-                                    background: "transparent",
-                                    color: "rgba(255,255,255,0.6)",
-                                    border: "1px solid rgba(255,255,255,0.1)",
-                                }}
-                            >
-                                Learn more
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-// ─────────────────────────────────────────────────────────────
-// Phase labels
-// ─────────────────────────────────────────────────────────────
-
-const PHASES = ["01 — Research & Wireframe", "02 — Code & Build", "03 — Polish & Ship"];
-const CYCLE_DURATION = 2500; // ms per phase
-
-// ─────────────────────────────────────────────────────────────
-// Main Component
-// ─────────────────────────────────────────────────────────────
-
-export function CinematicProcess() {
-    const sectionRef = useRef<HTMLElement>(null);
-    const layerRefs = useRef<(HTMLDivElement | null)[]>([null, null, null]);
-    const labelRefs = useRef<(HTMLSpanElement | null)[]>([null, null, null]);
-    const [activePhase, setActivePhase] = useState(0);
-    const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-    const isVisibleRef = useRef(false);
-    const isMobile = useIsMobile();
-
-    // Animate layer transition
-    useEffect(() => {
-        const layers = layerRefs.current;
-        const labels = labelRefs.current;
-
-        layers.forEach((layer, i) => {
-            if (!layer) return;
-            if (i === activePhase) {
-                gsap.fromTo(layer,
-                    { opacity: 0, scale: 1.06 },
-                    { opacity: 1, scale: 1, duration: 0.7, ease: "expo.out" }
-                );
-            } else {
-                gsap.to(layer, { opacity: 0, scale: 0.94, duration: 0.5, ease: "expo.in" });
-            }
-        });
-
-        labels.forEach((label, i) => {
-            if (!label) return;
-            if (i === activePhase) {
-                gsap.fromTo(label, { opacity: 0 }, { opacity: 1, duration: 0.5, delay: 0.2 });
-            } else {
-                gsap.to(label, { opacity: 0, duration: 0.3 });
-            }
-        });
-    }, [activePhase]);
-
-    // IntersectionObserver to start/stop auto-cycle
-    useEffect(() => {
-        const section = sectionRef.current;
-        if (!section) return;
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                const isVisible = entries[0].isIntersecting;
-                isVisibleRef.current = isVisible;
-
-                if (isVisible && !timerRef.current) {
-                    // Start cycling
-                    timerRef.current = setInterval(() => {
-                        setActivePhase((prev) => (prev + 1) % 3);
-                    }, CYCLE_DURATION);
-                } else if (!isVisible && timerRef.current) {
-                    // Stop cycling when out of view
-                    clearInterval(timerRef.current);
-                    timerRef.current = null;
-                }
-            },
-            {
-                // Mobile: lower threshold — on small screens the section may be
-                // taller than the viewport so 30% can never be simultaneously
-                // visible.  10% is enough to confirm the user has arrived.
-                threshold: isMobile ? 0.1 : 0.3,
-            }
-        );
-
-        observer.observe(section);
-
-        return () => {
-            observer.disconnect();
-            if (timerRef.current) clearInterval(timerRef.current);
-        };
-        // isMobile is in deps so the observer is recreated with the correct
-        // threshold once useIsMobile resolves on the client (SSR defaults false).
-    }, [isMobile]);
-
-    // Progress dots
-    const dots = PHASES.map((_, i) => (
-        <button
-            key={i}
-            onClick={() => setActivePhase(i)}
-            className="group flex items-center gap-2"
-        >
+            {/* Right: Scrollable Content (60%) */}
             <div
-                className="h-1.5 rounded-full transition-all duration-500"
-                style={{
-                    width: i === activePhase ? "2rem" : "0.375rem",
-                    background: i === activePhase
-                        ? "rgba(139,92,246,0.8)"
-                        : "rgba(255,255,255,0.15)",
-                }}
-            />
-        </button>
-    ));
-
-    return (
-        <section
-            ref={sectionRef}
-            className="relative py-24 md:py-32"
-        >
-            {/* Section heading */}
-            <div className="relative z-20 px-6">
-                <p
-                    className="mx-auto max-w-6xl font-mono text-sm"
-                    style={{ color: "rgba(255,255,255,0.3)", letterSpacing: "0.15em" }}
-                >
-                    Process
-                </p>
-                <h2
-                    className="mx-auto mt-4 max-w-6xl text-3xl font-light tracking-tight md:text-4xl"
-                    style={{ color: "rgba(255,255,255,0.9)" }}
-                >
-                    How I think
-                </h2>
-            </div>
-
-            {/* Layers container — fixed height, no pinning */}
-            <div className="relative mx-auto mt-12 flex items-center justify-center overflow-hidden md:mt-16"
-                style={{
-                    // Mobile: shorter container so it doesn't push below the fold
-                    // on compact phones (SE, Pixel 4a, etc.)
-                    height: isMobile
-                        ? "clamp(300px, 48vh, 420px)"
-                        : "clamp(380px, 55vh, 550px)",
-                }}
+                className="w-[60%] flex flex-col py-28 px-12 md:px-16 min-h-screen"
+                style={{ background: '#0e0e0e' }}
             >
-                {/* Layer 1: Wireframe */}
-                <div ref={(el) => { layerRefs.current[0] = el; }} className="absolute inset-0" style={{ opacity: 1 }}>
-                    <WireframeLayer />
+                <div className="max-w-3xl">
+                    <Accordion05 />
                 </div>
-
-                {/* Layer 2: Code */}
-                <div ref={(el) => { layerRefs.current[1] = el; }} className="absolute inset-0" style={{ opacity: 0 }}>
-                    <CodeLayer />
-                </div>
-
-                {/* Layer 3: Final UI */}
-                <div ref={(el) => { layerRefs.current[2] = el; }} className="absolute inset-0" style={{ opacity: 0 }}>
-                    <FinalUILayer />
-                </div>
-
-                {/* Phase label */}
-                <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2">
-                    {PHASES.map((phase, i) => (
-                        <span
-                            key={phase}
-                            ref={(el) => { labelRefs.current[i] = el; }}
-                            className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap font-mono text-xs"
-                            style={{
-                                color: "rgba(255,255,255,0.25)",
-                                letterSpacing: "0.1em",
-                                opacity: i === 0 ? 1 : 0,
-                            }}
-                        >
-                            {phase}
-                        </span>
-                    ))}
-                </div>
-            </div>
-
-            {/* Progress dots */}
-            <div className="mt-8 flex items-center justify-center gap-3">
-                {dots}
             </div>
         </section>
     );
