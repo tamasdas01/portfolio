@@ -4,7 +4,7 @@ import { Footer } from "@/components/ui/Footer";
 import { DottedSurface } from "@/components/ui/dotted-surface";
 import { HeroIdentity } from "@/components/sections/HeroIdentity";
 import { StatementSection } from "@/components/sections/StatementSection";
-import { ProjectShowcase } from "@/components/sections/ProjectShowcase";
+import { SelectedWork } from "@/components/sections/SelectedWork";
 import { CinematicProcess } from "@/components/sections/CinematicProcess";
 import { MindMap } from "@/components/sections/MindMap";
 import { Contact } from "@/components/sections/Contact";
@@ -23,7 +23,7 @@ export default function Home() {
         <main>
           <HeroIdentity />
           <StatementSection />
-          <ProjectShowcase />
+          <SelectedWork />
           <CinematicProcess />
           <MindMap />
           <Contact />
