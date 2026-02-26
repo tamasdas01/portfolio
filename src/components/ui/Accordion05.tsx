@@ -55,19 +55,33 @@ const items = [
         id: "8",
         title: "Let's connect",
         content:
-            "You can reach me through contact@tamasdas.in or on social platforms. I'm always open to new projects, collaborations, and conversations.",
+            "You can reach me through das.tamas13@gmail.com or on social platforms. I'm always open to new projects, collaborations, and conversations.",
     },
 ];
 
 export function Accordion05() {
     const [openItem, setOpenItem] = useState<string>("1");
 
+    const scrollToContact = (id: string) => {
+        if (id === "8") {
+            const contactSection = document.getElementById("contact");
+            if (contactSection) {
+                contactSection.scrollIntoView({ behavior: "smooth" });
+            }
+        }
+    };
+
     return (
         <div className="w-full max-w-3xl mx-auto">
             <Accordion
                 type="single"
                 value={openItem}
-                onValueChange={(val) => val && setOpenItem(val)}
+                onValueChange={(val) => {
+                    if (val) {
+                        setOpenItem(val);
+                        scrollToContact(val);
+                    }
+                }}
                 collapsible
                 className="w-full"
             >

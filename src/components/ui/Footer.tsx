@@ -10,22 +10,8 @@ export function Footer() {
                 <Reveal>
                     <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
                         <p className="font-mono text-sm text-text-secondary">
-                            © {new Date().getFullYear()} {SITE.name}
+                            © {new Date().getFullYear()} {SITE.name} DAS
                         </p>
-
-                        <div className="flex gap-6">
-                            {Object.entries(SITE.socials).map(([name, url]) => (
-                                <a
-                                    key={name}
-                                    href={url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="font-mono text-sm capitalize text-text-secondary transition-colors duration-300 hover:text-text-primary"
-                                >
-                                    {name}
-                                </a>
-                            ))}
-                        </div>
                     </div>
                 </Reveal>
             </div>
