@@ -66,6 +66,135 @@
   }
 }
 
+/* ── About Section: Scanning Animation ── */
+@keyframes aboutScan {
+  0% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(calc(100vh));
+  }
+}
+
+@keyframes aboutParticleFloat {
+
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateY(0) scale(0.8);
+  }
+
+  50% {
+    opacity: 0.4;
+    transform: translateY(-12px) scale(1);
+  }
+}
+
+.about-scan-container {
+  overflow: hidden;
+}
+
+.about-scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(196, 240, 70, 0.7), rgba(0, 255, 200, 0.5), transparent);
+  box-shadow:
+    0 0 12px 2px rgba(196, 240, 70, 0.3),
+    0 0 30px 4px rgba(196, 240, 70, 0.1);
+  animation: aboutScan 3.5s linear infinite;
+  will-change: transform;
+  z-index: 2;
+}
+
+/* Gradient fade above and below the scan line */
+.about-scan-line::before,
+.about-scan-line::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 40px;
+  pointer-events: none;
+}
+
+.about-scan-line::before {
+  bottom: 100%;
+  background: linear-gradient(to bottom, transparent, rgba(196, 240, 70, 0.04));
+}
+
+.about-scan-line::after {
+  top: 100%;
+  background: linear-gradient(to top, transparent, rgba(196, 240, 70, 0.04));
+}
+
+.about-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(196, 240, 70, 0.5);
+  animation: aboutParticleFloat 4s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+/* ── Rotating Hero Title ── */
+@keyframes rhtEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes rhtExit {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
+
+.rht-word-container {
+  position: relative;
+  display: inline-block;
+  height: 1.1em;
+  overflow: hidden;
+  vertical-align: bottom;
+  min-width: 3ch;
+}
+
+.rht-word {
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  white-space: nowrap;
+  will-change: transform, opacity;
+}
+
+.rht-enter {
+  animation: rhtEnter 600ms ease-in-out forwards;
+}
+
+.rht-exit {
+  animation: rhtExit 600ms ease-in-out forwards;
+}
+
+.rht-word {
+  text-shadow: 0 0 30px currentColor, 0 0 60px rgba(255, 255, 255, 0.05);
+}
+
 /* === Base Styles === */
 @layer base {
   * {
