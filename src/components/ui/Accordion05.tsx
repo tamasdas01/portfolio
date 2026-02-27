@@ -62,11 +62,20 @@ const items = [
 export function Accordion05() {
     const [openItem, setOpenItem] = useState<string>("1");
 
-    const scrollToContact = (id: string) => {
-        if (id === "8") {
-            const contactSection = document.getElementById("contact");
-            if (contactSection) {
-                contactSection.scrollIntoView({ behavior: "smooth" });
+    const scrollToSection = (id: string) => {
+        const sectionMap: Record<string, string> = {
+            "1": "work",         // What do I design? → Projects
+            "2": "about",         // Who am I? → About section
+            "3": "how-i-think",   // My design approach → How I Think
+            "7": "toolkit",       // My toolkit → I build digital experiences
+            "8": "contact",       // Let's connect → Contact
+        };
+
+        const targetId = sectionMap[id];
+        if (targetId) {
+            const el = document.getElementById(targetId);
+            if (el) {
+                el.scrollIntoView({ behavior: "smooth" });
             }
         }
     };
@@ -79,7 +88,7 @@ export function Accordion05() {
                 onValueChange={(val) => {
                     if (val) {
                         setOpenItem(val);
-                        scrollToContact(val);
+                        scrollToSection(val);
                     }
                 }}
                 collapsible

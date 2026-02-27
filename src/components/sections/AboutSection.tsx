@@ -17,7 +17,7 @@ const EDUCATION = [
         level: "B.Tech",
         institution: "Guru Nanak Institute of Technology (MAKAUT)",
         focus: "Computer Science & Engineering",
-        result: "7.76 CGPA",
+        result: "7.97 CGPA",
     },
     {
         level: "XII (ISC)",
@@ -28,7 +28,7 @@ const EDUCATION = [
     {
         level: "X (ICSE)",
         institution: "St. Joseph and Mary's School",
-        focus: "General Studies",
+        focus: "Computer Science",
         result: "88%",
     },
 ];

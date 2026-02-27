@@ -328,7 +328,7 @@ export const SelectedWork = () => {
 
     return (
         <section
-            id="selected-projects"
+            id="work"
             className="relative px-6 py-24 md:px-8 md:py-32 overflow-hidden"
         >
             <div className="mx-auto max-w-6xl relative" ref={containerRef}>
