@@ -123,7 +123,7 @@ export function ClipPathLinks() {
             <div className="grid grid-cols-2 divide-x divide-white/[0.08]">
                 <LinkBox
                     Icon={Mail}
-                    href="mailto:das.tamas13@gmail.com"
+                    href="https://mail.google.com/mail/?view=cm&fs=1&to=das.tamas13@gmail.com"
                 />
                 <LinkBox
                     Icon={Github}

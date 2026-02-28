@@ -224,9 +224,12 @@ export function HeroIdentity({
                     transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 2.4 }}
                     className="mt-6 md:mt-8 flex flex-col items-center gap-4"
                 >
-                    {/* Status pill */}
-                    <div
-                        className="flex items-center gap-2.5 px-4 py-2 rounded-full"
+                    {/* Status pill / Mail Link */}
+                    <a
+                        href="https://mail.google.com/mail/?view=cm&fs=1&to=das.tamas13@gmail.com&su=Opportunity%20-%20Off%20Campus%20Role%202026"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2.5 px-4 py-2 rounded-full cursor-pointer transition-colors hover:bg-white/5"
                         style={{
                             background: "rgba(34,197,94,0.06)",
                             border: "1px solid rgba(34,197,94,0.15)",
@@ -243,11 +246,12 @@ export function HeroIdentity({
                                 fontSize: isMobile ? "0.6rem" : "0.7rem",
                                 letterSpacing: "0.06em",
                                 color: "rgba(34,197,94,0.7)",
+                                textTransform: "uppercase" as const,
                             }}
                         >
                             Available for 2026 SDE Roles
                         </span>
-                    </div>
+                    </a>
 
                     {/* View Resume button */}
                     <a
