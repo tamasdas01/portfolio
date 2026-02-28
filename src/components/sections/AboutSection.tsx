@@ -170,6 +170,22 @@ export const AboutSection = () => {
                             I don&apos;t just write features. I design systems that scale, ship cleanly, and solve
                             actual problems.
                         </p>
+                        <p
+                            className="text-accent"
+                            style={{
+                                textShadow: "0 0 20px rgba(196,240,70,0.3), 0 0 40px rgba(196,240,70,0.1)",
+                            }}
+                        >
+                            Currently seeking full-time software engineering roles starting in 2026.
+                        </p>
+                        <a
+                            href="/resume.pdf"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 font-mono text-xs text-accent/70 hover:text-accent transition-colors underline underline-offset-4"
+                        >
+                            View Resume →
+                        </a>
                     </motion.div>
 
                     {/* Divider */}

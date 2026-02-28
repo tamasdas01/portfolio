@@ -217,6 +217,64 @@ export function HeroIdentity({
                     Creative Developer &nbsp;·&nbsp; Crafting digital experiences
                 </motion.p>
 
+                {/* Availability Status Pill + Resume CTA */}
+                <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={entered ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 2.4 }}
+                    className="mt-6 md:mt-8 flex flex-col items-center gap-4"
+                >
+                    {/* Status pill */}
+                    <div
+                        className="flex items-center gap-2.5 px-4 py-2 rounded-full"
+                        style={{
+                            background: "rgba(34,197,94,0.06)",
+                            border: "1px solid rgba(34,197,94,0.15)",
+                            backdropFilter: "blur(8px)",
+                        }}
+                    >
+                        <span className="relative flex h-2 w-2">
+                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
+                            <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+                        </span>
+                        <span
+                            style={{
+                                fontFamily: "var(--font-mono-var), ui-monospace, monospace",
+                                fontSize: isMobile ? "0.6rem" : "0.7rem",
+                                letterSpacing: "0.06em",
+                                color: "rgba(34,197,94,0.7)",
+                            }}
+                        >
+                            Available for 2026 SDE Roles
+                        </span>
+                    </div>
+
+                    {/* View Resume button */}
+                    <a
+                        href="/resume.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex items-center gap-2 px-5 py-2 rounded-full transition-all duration-300"
+                        style={{
+                            border: "1px solid rgba(139,92,246,0.25)",
+                            background: "linear-gradient(to bottom, #A78BFA, #7C3AED)",
+                            WebkitBackgroundClip: "text",
+                            WebkitTextFillColor: "transparent",
+                            backgroundClip: "text",
+                            fontFamily: "var(--font-mono-var), ui-monospace, monospace",
+                            fontSize: isMobile ? "0.6rem" : "0.7rem",
+                            letterSpacing: "0.08em",
+                            textTransform: "uppercase" as const,
+                            textShadow: "0 0 30px rgba(139,92,246,0.3)",
+                        }}
+                    >
+                        View Resume
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform duration-300 group-hover:translate-x-0.5">
+                            <path d="M7 17l9.2-9.2M17 17V7H7" />
+                        </svg>
+                    </a>
+                </motion.div>
+
                 {/* Scroll indicator */}
                 <motion.div
                     initial={{ opacity: 0 }}

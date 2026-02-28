@@ -54,8 +54,27 @@ const items = [
     {
         id: "8",
         title: "Let's connect",
-        content:
-            "You can reach me through das.tamas13@gmail.com or on social platforms. I'm always open to new projects, collaborations, and conversations.",
+        content: (
+            <>
+                I&apos;m actively looking for <strong className="text-white/70">new grad / off-campus software engineering roles starting 2026</strong>.
+                <span className="flex flex-col sm:flex-row sm:items-center gap-3 mt-3">
+                    <a
+                        href="/resume.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 font-mono text-xs text-accent hover:underline underline-offset-4"
+                    >
+                        📄 View Resume
+                    </a>
+                    <a
+                        href="mailto:das.tamas13@gmail.com"
+                        className="inline-flex items-center gap-1.5 font-mono text-xs text-accent hover:underline underline-offset-4"
+                    >
+                        ✉️ das.tamas13@gmail.com
+                    </a>
+                </span>
+            </>
+        ),
     },
 ];
 
