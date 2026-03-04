@@ -43,14 +43,6 @@ A modern developer portfolio showcasing my projects, skills, and work.
 🔗 Live:  
 https://portfolio-tamas.vercel.app/
 
----
-
-# 📊 GitHub Stats
-
-![Tamas GitHub stats](https://github-readme-stats.vercel.app/api?username=tamasdas01&show_icons=true&theme=tokyonight)
-
-![Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=tamasdas01&layout=compact&theme=tokyonight)
-
 
 ---
 
