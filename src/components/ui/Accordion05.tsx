@@ -29,9 +29,9 @@ const items = [
     },
     {
         id: "4",
-        title: "Beyond design",
+        title: "Beyond work",
         content:
-            "I bridge design and development, turning ideas into interactive experiences with modern tools and technology.",
+            "When I'm not coding, you'll find me teaching, hitting the gym, going on long rides, or exploring new places with a camera in hand.",
     },
     {
         id: "5",
@@ -86,6 +86,7 @@ export function Accordion05() {
             "1": "work",         // What do I design? → Projects
             "2": "about",         // Who am I? → About section
             "3": "how-i-think",   // My design approach → How I Think
+            "4": "beyond-work",   // Beyond work → Beyond Work section
             "7": "toolkit",       // My toolkit → I build digital experiences
             "8": "contact",       // Let's connect → Contact
         };

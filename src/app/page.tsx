@@ -8,6 +8,7 @@ import { SelectedWork } from "@/components/sections/SelectedWork";
 import { AboutSection } from "@/components/sections/AboutSection";
 import { CinematicProcess } from "@/components/sections/CinematicProcess";
 import { MindMap } from "@/components/sections/MindMap";
+import { BeyondWorkSection } from "@/components/sections/BeyondWorkSection";
 import { Contact } from "@/components/sections/Contact";
 
 export default function Home() {
@@ -28,6 +29,7 @@ export default function Home() {
           <SelectedWork />
           <CinematicProcess />
           <MindMap />
+          <BeyondWorkSection />
           <Contact />
         </main>
 

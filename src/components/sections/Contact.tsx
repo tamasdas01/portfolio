@@ -4,7 +4,7 @@ import { ClipPathLinks } from "@/components/ui/clip-path-links";
 
 export function Contact() {
     return (
-        <section id="contact" className="px-6 py-24 md:px-8 md:py-32">
+        <section id="contact" className="px-6 pt-24 pb-32 md:px-8 md:pt-32 md:pb-40">
             <div className="mx-auto max-w-7xl">
                 <ClipPathLinks />
                 <div className="mt-12 flex justify-center">

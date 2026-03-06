@@ -28,10 +28,11 @@ export function Reveal({
     const isMobile = useIsMobile();
     const isInView = useInView(ref, {
         once: true,
-        // Mobile: fire a little earlier (-40px) so animations feel snappier
+        // Mobile: fire a little earlier (-10px) so animations feel snappier
         // on short screens without the user having to over-scroll.
-        // Desktop: keep the conservative -80px for a more deliberate reveal.
-        margin: isMobile ? "-40px" : "-80px",
+        // Desktop: keep a conservative -20px for a more deliberate reveal, 
+        // but small enough to guarantee footer visibility.
+        margin: isMobile ? "-10px" : "-20px",
     });
 
     return (
