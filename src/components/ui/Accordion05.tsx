@@ -64,13 +64,13 @@ const items = [
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 font-mono text-xs text-accent hover:underline underline-offset-4"
                     >
-                        📄 View Resume
+                        View Resume
                     </a>
                     <a
                         href="mailto:das.tamas13@gmail.com"
                         className="inline-flex items-center gap-1.5 font-mono text-xs text-accent hover:underline underline-offset-4"
                     >
-                        ✉️ das.tamas13@gmail.com
+                        das.tamas13@gmail.com
                     </a>
                 </span>
             </>

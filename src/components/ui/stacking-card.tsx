@@ -73,8 +73,8 @@ export const Card = ({
                 {/* Left: title + description */}
                 <div className="flex flex-col flex-1 justify-center z-10">
                     <h2
-                        className="text-2xl mb-4"
-                        style={{ color: '#E5E7EB', fontWeight: 600, letterSpacing: '0.02em' }}
+                        className="text-3xl md:text-4xl mb-4 font-display font-light tracking-tight"
+                        style={{ color: '#E5E7EB' }}
                     >
                         {title}
                     </h2>
