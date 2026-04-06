@@ -63,4 +63,29 @@ export const PLACEHOLDER_WORKS: ProjectData[] = [
         year: "2024",
         liveUrl: "https://rasmaya1-xfdif.kinsta.page/",
     },
+    {
+        slug: "caretech-health-solutions",
+        title: "CareTech Healthcare Website",
+        description:
+            "CareTech Health Solutions is a comprehensive full-stack healthcare services platform built for delivering professional medical care at home across Kolkata and South 24 Parganas. The platform operates as a modern Progressive Web App with SEO-optimized pages, dynamic routing, and real-time appointment booking capabilities.\n\nThe platform enables users to book and manage 8 distinct healthcare services — Nursing at Home, Transection Visit, Doctor Consultancy, Physiotherapy at Home, Lab Test at Home, Medical Equipment at Home, Consumables & Surgical Items, and Cancer Care at Home — each with dedicated pages, detailed information, and dynamic routing.\n\nA product catalog features 20+ medical equipment items available for rent or purchase, including respiratory equipment (CPAP/BiPAP, oxygen concentrators, nebulizers), mobility solutions (hospital beds, wheelchairs, walkers), and monitoring devices. A dual-mode toggle switches between rental and purchase views with contextual pricing and CTAs.\n\nThe booking system is powered by EmailJS integration with real-time form validation, automatic email delivery to care coordinators, error handling, service pre-selection from detail pages, and success confirmation with auto-reset. Physiotherapy pricing features three tiered packages (Silver, Gold, Platinum) with flexible day plans (7, 15, 30 days).\n\nSEO features include a dynamic XML sitemap, robots.txt, JSON-LD MedicalBusiness schema, Open Graph tags, and 4 additional high-value local search pages. Performance is delivered through intelligent caching headers, image optimization, and Babel React Compiler integration. Vercel Analytics and Speed Insights handle monitoring.\n\nThe UI includes a sticky scroll-aware navbar, mobile bottom bar, floating WhatsApp button, testimonial carousel, animated hero with quick service chips, and scroll-triggered Framer Motion animations throughout.",
+        role: "Full-Stack Developer & Project Owner — Designed the complete system architecture from concept to production. Built all 11+ pages and dynamic routes using Next.js App Router, developed responsive layouts with Tailwind CSS (mobile-first), and created interactive components with real-time state management.\n\nImplemented EmailJS integration for appointment booking with comprehensive form validation, multi-step form flows with pre-filled service context, and automatic email delivery to business accounts.\n\nGenerated dynamic sitemaps, implemented robots.txt, added JSON-LD structured data for Local Business schema, and configured intelligent caching headers. Deployed on Vercel with CI/CD pipeline, environment variable management, and Vercel Analytics integration.\n\nDesigned the cohesive color scheme (blue/teal gradient for healthcare trust), built the branded logo component, implemented the testimonial carousel, and created the 'Why Us' trust indicators section. Built the pricing package system with flexible duration/rate plans and the dual-mode product toggle (Rent vs. Buy).\n\nKey Achievements: 8 healthcare services fully documented and bookable · 20+ medical products with dual rent/buy functionality · EmailJS form integration · Dynamic pricing for physiotherapy (3 packages, 3 durations) · SEO-optimized for local healthcare keywords · Mobile-responsive with high Lighthouse scores · 24/7 contact accessibility through multiple channels · JSON-LD structured data for search engine visibility.",
+        techStack: [
+            "Next.js",
+            "React",
+            "TypeScript",
+            "Tailwind CSS",
+            "Framer Motion",
+            "EmailJS",
+            "Vercel Analytics",
+            "Lucide React",
+            "ESLint",
+        ],
+        thumbnail: "/projects/caretech_thumb.webp",
+        images: [
+            "/projects/caretech-img1.webp",
+            "/projects/caretech-img2.webp",
+        ],
+        year: "2026 - Present",
+        liveUrl: "https://caretechhealthsolutions.com",
+    },
 ];

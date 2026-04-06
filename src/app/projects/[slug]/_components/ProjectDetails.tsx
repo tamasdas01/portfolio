@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 import Image from "next/image";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { ArrowLeft, ExternalLink, Github } from "lucide-react";
 import type { ProjectData } from "@/lib/projects";
 
@@ -17,6 +17,11 @@ interface Props {
 
 const ProjectDetails = ({ project }: Props) => {
     const containerRef = useRef<HTMLDivElement>(null);
+
+    /* ── Always start at the top of the page ── */
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "instant" });
+    }, []);
 
     /* ── Staggered fade-in on load ── */
     useGSAP(
@@ -53,7 +58,7 @@ const ProjectDetails = ({ project }: Props) => {
                     start: "bottom bottom",
                     end: "bottom top",
                     pin: true,
-                    pinSpacing: false,
+                    pinSpacing: true,
                     scrub: 0.5,
                 },
             });
