@@ -214,7 +214,7 @@ export function HeroIdentity({
                         maxWidth: isMobile ? "280px" : "auto"
                     }}
                 >
-                    Creative Developer &nbsp;·&nbsp; Crafting digital experiences
+                    Building products from zero to production — independently.
                 </motion.p>
 
                 {/* Availability Status Pill + Resume CTA */}

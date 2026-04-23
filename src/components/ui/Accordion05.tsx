@@ -13,50 +13,50 @@ const items = [
         id: "1",
         title: "What do I design?",
         content:
-            "I create clean, functional interfaces, brand systems, and digital products. My work blends simplicity with clarity and usability.",
+            "End-to-end digital products — from system architecture and backend logic to pixel-precise interfaces. I don't just build screens; I build things that work in production, at scale, and feel intentional to use.",
     },
     {
         id: "2",
         title: "Who am I?",
         content:
-            "I'm Tamas Das — a designer and creative developer focused on building digital experiences that are minimal, meaningful, and timeless.",
+            "I'm Tamas Das — a self-taught full-stack developer and freelancer from Kolkata. I've independently designed, built, and shipped real products used by real people. I treat every project like a founder would: with ownership, urgency, and care for the long term.",
     },
     {
         id: "3",
         title: "My design approach",
         content:
-            "For me, design isn't just visuals — it's how something feels and works. I focus on clarity, detail, and storytelling in every project.",
+            "System-first, always. I start with structure — how data flows, how components scale, how the user moves. Design is the last mile, not the starting point. That's what makes the end result feel both polished and purposeful.",
     },
     {
         id: "4",
         title: "Beyond work",
         content:
-            "When I'm not coding, you'll find me teaching, hitting the gym, going on long rides, or exploring new places with a camera in hand.",
+            "I teach school students, hit the gym daily, go on long rides, and shoot photos along the way. Discipline outside of work is what keeps my work disciplined. These aren't hobbies — they're how I stay sharp.",
     },
     {
         id: "5",
         title: "What inspires me",
         content:
-            "Minimalism, architecture, and everyday details. I believe great design is found in the small things we often overlook.",
+            "Products that feel inevitable. The kind where every detail seems obvious in hindsight — but took real thought to get there. Linear, Vercel, Rauno's work. Things built with conviction, not trend.",
     },
     {
         id: "6",
         title: "Who I work with",
         content:
-            "I collaborate with startups, brands, and individuals who value thoughtful design and want to create lasting impact.",
+            "Founders who need a technical co-pilot. Startups that want production-quality work without a full engineering team. Clients who value clarity and execution over back-and-forth. If you have a real problem, I'm interested.",
     },
     {
         id: "7",
         title: "My toolkit",
         content:
-            "Figma, Next.js, and modern frameworks are part of my process — but for me, tools always serve the idea, not the other way around.",
+            "Next.js, React, TypeScript, Supabase, Firebase, Tailwind, Framer Motion, and Node.js form the core. But the real toolkit is product thinking — knowing when to use what, and when to ship and iterate.",
     },
     {
         id: "8",
         title: "Let's connect",
         content: (
             <>
-                I&apos;m actively looking for <strong className="text-white/70">new grad / off-campus software engineering roles starting 2026</strong>.
+                I&apos;m currently open to freelance projects and full-time SDE roles starting 2026. If you&apos;re building something worth building — reach out. I respond to every serious message.
                 <span className="flex flex-col sm:flex-row sm:items-center gap-3 mt-3">
                     <a
                         href="/resume.pdf"
@@ -67,7 +67,9 @@ const items = [
                         View Resume
                     </a>
                     <a
-                        href="mailto:das.tamas13@gmail.com"
+                        href="https://mail.google.com/mail/?view=cm&fs=1&to=das.tamas13@gmail.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 font-mono text-xs text-accent hover:underline underline-offset-4"
                     >
                         das.tamas13@gmail.com

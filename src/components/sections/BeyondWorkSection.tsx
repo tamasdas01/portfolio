@@ -66,12 +66,7 @@ export function BeyondWorkSection() {
                     className="mt-6 max-w-3xl text-sm leading-relaxed md:text-base"
                     style={{ color: 'rgba(255,255,255,0.5)' }}
                 >
-                    Building software is a big part of my life, but the things I do
-                    outside of code shape the way I think, create, and grow. Over the
-                    years, I&apos;ve learned that discipline, curiosity, and exploration
-                    outside of work often translate into better ideas and better systems.
-                    From teaching students to exploring new places, these experiences keep
-                    me grounded and constantly learning.
+                    The best developers I know have rich lives outside the terminal. Teaching sharpened how I explain complex systems. The gym taught me what consistency actually looks like. Long rides reminded me that getting lost is part of finding direction. These aren&apos;t separate from my work — they&apos;re why my work is better.
                 </p>
             </div>
 

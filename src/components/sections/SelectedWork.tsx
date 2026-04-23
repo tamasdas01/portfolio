@@ -131,20 +131,8 @@ const ProjectItem = ({
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
             >
-                {/* Mobile Thumbnail */}
-                {selectedProject === null && isMobile && (
-                    <Link href={`/projects/${project.slug}`}>
-                        <Image
-                            src={project.thumbnail}
-                            alt={project.title}
-                            width={400}
-                            height={300}
-                            className="w-full object-cover mb-6 aspect-[3/2] object-center rounded-lg"
-                            priority
-                        />
-                    </Link>
-                )}
-                <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between opacity-50 md:group-hover/item:opacity-100 transition-opacity duration-500">
+                {/* On mobile: thumbnail is hidden; project name is always fully visible (no hover needed). */}
+                <div className={`flex flex-col gap-4 md:flex-row md:items-start md:justify-between transition-opacity duration-500 ${isMobile ? "opacity-100" : "opacity-50 group-hover/item:opacity-100"}`}>
                     <div className="flex gap-4 md:gap-8 items-start">
                         <div className="font-mono text-text-tertiary mt-2">
                             {(index + 1).toString().padStart(2, "0")}
@@ -153,7 +141,7 @@ const ProjectItem = ({
                             <div className="flex items-center gap-4">
                                 {/* Project name → detail page */}
                                 <Link href={`/projects/${project.slug}`}>
-                                    <h4 className="text-3xl md:text-5xl font-display font-light transition-all text-text-secondary group-hover/item:text-text-primary hover:text-white">
+                                    <h4 className={`text-3xl md:text-5xl font-display font-light transition-all ${isMobile ? "text-text-primary" : "text-text-secondary group-hover/item:text-text-primary hover:text-white"}`}>
                                         {project.title}
                                     </h4>
                                 </Link>

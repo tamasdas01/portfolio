@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useIsMobile } from "@/lib/use-mobile";
 import { Accordion05 } from "@/components/ui/Accordion05";
 
-const ROLES = ["STRATEGIST", "DESIGNER", "DEVELOPER", "STORYTELLER"];
+const ROLES = ["ARCHITECT", "DESIGNER", "DEVELOPER", "STORYTELLER"];
 
 export function CinematicProcess() {
     const isMobile = useIsMobile();
@@ -19,6 +19,8 @@ export function CinematicProcess() {
 
     useEffect(() => {
         if (isMobile) return;
+        // Respect the user's reduced-motion preference — skip the parallax entirely
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
         const onMove = (e: MouseEvent) => {
             target.current.x = (e.clientX / window.innerWidth - 0.5) * 16;

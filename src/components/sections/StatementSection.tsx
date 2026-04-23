@@ -14,15 +14,15 @@ const SKILL_CATEGORIES = [
     },
     {
         label: "Frontend & App",
-        items: ["Flutter", "React", "Tailwind CSS", "Technical SEO"],
+        items: ["Next.js", "Flutter", "React", "Tailwind CSS", "Technical SEO"],
     },
     {
         label: "Backend & Database",
-        items: ["Next.js", "Capacitor", "Firebase", "Supabase", "MySQL", "Node.js", "Cloudflare"],
+        items: ["Capacitor", "Firebase", "Supabase", "MySQL", "Node.js", "Cloudflare"],
     },
     {
         label: "Tools",
-        items: ["Git/GitHub", "VS Code", "Antigravity", "Android Studio", "Google Play Console", "Vercel"],
+        items: ["Git/GitHub", "VS Code", "Android Studio", "Google Play Console", "Google Search Console", "Vercel"],
     },
     {
         label: "Soft Skills",
@@ -30,7 +30,7 @@ const SKILL_CATEGORIES = [
     },
     {
         label: "AI Tools",
-        items: ["ChatGPT", "Gemini", "Claude", "Perplexity", "NotebookLM", "Google AI Studio"],
+        items: ["ChatGPT", "Gemini", "Claude", "NotebookLM", "Google AI Studio", "Prompt Engineering", "Creative Design using AI"],
     },
 ];
 

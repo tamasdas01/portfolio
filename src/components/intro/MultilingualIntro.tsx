@@ -4,38 +4,50 @@ import { useEffect, useRef, useCallback } from "react";
 import { gsap } from "gsap";
 import "./multilingual-intro.css";
 
-/* ── Word data — exact order from prompt ── */
+/* ── Word data — 14 languages, Bengali first, English last ── */
 interface Word {
   text: string;
-  script: "default" | "cjk" | "arabic";
+  script: "default" | "cjk" | "arabic" | "korean";
 }
 
 const WORDS: Word[] = [
-  { text: "নমস্কার", script: "default" },   // Bengali
-  { text: "नमस्ते", script: "default" },    // Hindi
-  { text: "こんにちは", script: "cjk" },      // Japanese
-  { text: "你好", script: "cjk" },           // Mandarin
-  { text: "مرحبًا", script: "arabic" },      // Arabic
-  { text: "Привет", script: "default" },    // Russian
-  { text: "Ciao", script: "default" },      // Italian
-  { text: "Bonjour", script: "default" },   // French
-  { text: "Hola", script: "default" },      // Spanish
-  { text: "Hello", script: "default" },     // English — FINAL
+  { text: "নমস্কার", script: "default" },  // 1.  Bengali
+  { text: "नमस्ते", script: "default" },  // 2.  Hindi
+  { text: "こんにちは", script: "cjk" },  // 3.  Japanese
+  { text: "你好", script: "cjk" },  // 4.  Mandarin
+  { text: "안녕하세요", script: "korean" },  // 5.  Korean
+  { text: "مرحبًا", script: "arabic" },  // 6.  Arabic
+  { text: "Привет", script: "default" },  // 7.  Russian
+  { text: "Γεια σου", script: "default" },  // 8.  Greek
+  { text: "Ciao", script: "default" },  // 9.  Italian
+  { text: "Bonjour", script: "default" },  // 10. French
+  { text: "Hallo", script: "default" },  // 11. German
+  { text: "Hola", script: "default" },  // 12. Spanish
+  { text: "Olá", script: "default" },  // 13. Portuguese
+  { text: "Hello", script: "default" },  // 14. English — FINAL (water fall)
 ];
 
 const delay = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
 /* ── Split text into visual grapheme clusters ──
-   Handles Bengali/Hindi combining chars (virama, vowel signs)
-   that [...text] would break into individual code points */
+   Handles Bengali/Hindi combining chars that [...text] would break */
 function splitGraphemes(text: string): string[] {
   if (typeof Intl !== "undefined" && "Segmenter" in Intl) {
     const segmenter = new Intl.Segmenter("en", { granularity: "grapheme" });
     return [...segmenter.segment(text)].map((s) => s.segment);
   }
-  // Fallback: regex-based approach for combining marks
   const clusters = text.match(/\P{M}\p{M}*/gu);
   return clusters || [...text];
+}
+
+/* ── CSS class for script type ── */
+function scriptClass(script: Word["script"]): string {
+  switch (script) {
+    case "arabic": return " ml-intro__letter--arabic";
+    case "cjk": return " ml-intro__letter--cjk";
+    case "korean": return " ml-intro__letter--korean";
+    default: return "";
+  }
 }
 
 interface MultilingualIntroProps {
@@ -51,68 +63,89 @@ export function MultilingualIntro({ onComplete }: MultilingualIntroProps) {
   const progressRef = useRef<HTMLDivElement>(null);
   const hasRun = useRef(false);
 
-  /* ── Build letter spans for a word ── */
+  /* ─────────────────────────────────────────────
+     BUILD — single whole-word span (flash words)
+  ───────────────────────────────────────────── */
+  const buildWordUnit = useCallback((word: Word): HTMLSpanElement => {
+    const container = wordRef.current!;
+    container.innerHTML = "";
+    const span = document.createElement("span");
+    span.className = `ml-intro__letter${scriptClass(word.script)}`;
+    span.textContent = word.text;
+    gsap.set(span, { opacity: 0 });
+    container.appendChild(span);
+    return span;
+  }, []);
+
+  /* ─────────────────────────────────────────────
+     BUILD — per-letter spans (Hello finale only)
+  ───────────────────────────────────────────── */
   const buildLetters = useCallback((word: Word): HTMLSpanElement[] => {
-    const container = wordRef.current;
-    if (!container) return [];
+    const container = wordRef.current!;
     container.innerHTML = "";
 
-    // Arabic: single unit — splitting RTL ligatures breaks rendering
+    // Arabic: always single unit — splitting RTL ligatures breaks rendering
     if (word.script === "arabic") {
       const span = document.createElement("span");
       span.className = "ml-intro__letter ml-intro__letter--arabic";
+      gsap.set(span, { opacity: 0, y: 20 });
       span.textContent = word.text;
-      span.style.opacity = "0";
-      span.style.transform = "translateY(28px)";
       container.appendChild(span);
       return [span];
     }
 
-    // Use grapheme segmenter for proper cluster splitting
-    // (prevents Bengali/Hindi combining marks from showing as broken circles)
     const graphemes = splitGraphemes(word.text);
-
     return graphemes.map((ch) => {
       const span = document.createElement("span");
-      span.className = `ml-intro__letter${word.script === "cjk" ? " ml-intro__letter--cjk" : ""}`;
+      span.className = `ml-intro__letter${scriptClass(word.script)}`;
       span.textContent = ch === " " ? "\u00A0" : ch;
-      span.style.opacity = "0";
-      span.style.transform = "translateY(28px)";
+      gsap.set(span, { opacity: 0, y: 20 });
       container.appendChild(span);
       return span;
     });
   }, []);
 
-  /* ── Stagger IN — 42ms between letters, GSAP ── */
+  /* ─────────────────────────────────────────────
+     FLASH IN — instant appear, hold 130ms
+  ───────────────────────────────────────────── */
+  const flashIn = useCallback(async (span: HTMLSpanElement) => {
+    gsap.set(span, { opacity: 1 });
+    await delay(130);
+  }, []);
+
+  /* ─────────────────────────────────────────────
+     FLASH OUT — 35ms fade, then tiny gap
+  ───────────────────────────────────────────── */
+  const flashOut = useCallback(async (span: HTMLSpanElement) => {
+    return new Promise<void>((resolve) => {
+      gsap.to(span, {
+        opacity: 0,
+        duration: 0.035,
+        ease: "none",
+        onComplete: resolve,
+      });
+    });
+  }, []);
+
+  /* ─────────────────────────────────────────────
+     STAGGER IN — Hello entrance (per-letter)
+  ───────────────────────────────────────────── */
   const staggerIn = useCallback(async (letters: HTMLSpanElement[]) => {
     return new Promise<void>((resolve) => {
-      gsap.set(letters, { opacity: 0, y: 28 });
       gsap.to(letters, {
         opacity: 1,
         y: 0,
-        duration: 0.32,
-        ease: "cubic-bezier(0.22,1,0.36,1)",
-        stagger: 0.042,
+        duration: 0.22,
+        ease: "power2.out",
+        stagger: 0.03,
         onComplete: resolve,
       });
     });
   }, []);
 
-  /* ── Stagger OUT — 28ms between letters, GSAP ── */
-  const staggerOut = useCallback(async (letters: HTMLSpanElement[]) => {
-    return new Promise<void>((resolve) => {
-      gsap.to(letters, {
-        opacity: 0,
-        y: -20,
-        duration: 0.18,
-        ease: "ease-in",
-        stagger: 0.028,
-        onComplete: resolve,
-      });
-    });
-  }, []);
-
-  /* ── Spawn SVG ripple at x-position ── */
+  /* ─────────────────────────────────────────────
+     RIPPLE
+  ───────────────────────────────────────────── */
   const spawnRipple = useCallback((xPercent: number) => {
     const svg = rippleSvgRef.current;
     if (!svg) return;
@@ -128,20 +161,21 @@ export function MultilingualIntro({ onComplete }: MultilingualIntroProps) {
     svg.appendChild(el);
 
     let frame = 0;
-    const max = 30;
     const tick = () => {
       frame++;
-      const p = frame / max;
+      const p = frame / 30;
       el.setAttribute("rx", String(2 + p * 44));
       el.setAttribute("ry", String(1.5 + p * 10));
       el.setAttribute("stroke", `rgba(168,85,247,${(1 - p) * 0.7})`);
-      if (frame < max) requestAnimationFrame(tick);
+      if (frame < 30) requestAnimationFrame(tick);
       else el.remove();
     };
     requestAnimationFrame(tick);
   }, []);
 
-  /* ── River Fall — "Hello" sinks into water ── */
+  /* ─────────────────────────────────────────────
+     RIVER FALL — Hello sinks into water
+  ───────────────────────────────────────────── */
   const riverFall = useCallback(
     async (letters: HTMLSpanElement[]) => {
       const intro = introRef.current;
@@ -150,43 +184,38 @@ export function MultilingualIntro({ onComplete }: MultilingualIntroProps) {
       const wordDisplay = wordRef.current;
       if (!intro || !water || !mask || !wordDisplay) return;
 
-      // 1. Fade in water surface over 350ms
-      gsap.to(water, { opacity: 1, duration: 0.35, ease: "none" });
+      gsap.to(water, { opacity: 1, duration: 0.3, ease: "none" });
 
-      // 2. Size & show the sink mask
       const surfaceRect = water.getBoundingClientRect();
       const introRect = intro.getBoundingClientRect();
       mask.style.height = introRect.bottom - surfaceRect.bottom + "px";
       gsap.set(mask, { opacity: 1 });
 
-      // Calculate how far letters need to fall to reach water
       const stageRect = wordDisplay.getBoundingClientRect();
       const dropToWater = surfaceRect.top - stageRect.bottom + 10;
 
-      // 3. Each letter falls independently
       const fallPromises = letters.map(
         (letter, i) =>
-          new Promise<void>(async (resolve) => {
+          new Promise<void>((resolve) => {
             const tipDir = Math.random() > 0.5 ? 1 : -1;
             const tipAngle = (78 + Math.random() * 18) * tipDir;
             const xDrift = (Math.random() - 0.5) * 30;
-            // 70ms stagger ± 45ms random jitter
-            const fallDelay = i * 0.07 + (Math.random() - 0.5) * 0.09;
+            const fallDelay = Math.max(0, i * 0.06 + (Math.random() - 0.5) * 0.08);
             const xPct = 20 + (i / Math.max(letters.length - 1, 1)) * 60;
 
-            // Phase 1 — Fall + Tip
+            // Phase 1 — Fall
             gsap.to(letter, {
               y: dropToWater,
               x: xDrift,
               rotation: tipAngle,
               opacity: 0.85,
-              duration: 0.65,
+              duration: 0.58,
               ease: "power2.in",
-              delay: Math.max(0, fallDelay),
+              delay: fallDelay,
               onComplete: () => {
                 // Phase 2 — Splash
                 spawnRipple(xPct);
-                setTimeout(() => spawnRipple(xPct + (Math.random() - 0.5) * 9), 80);
+                setTimeout(() => spawnRipple(xPct + (Math.random() - 0.5) * 9), 75);
 
                 // Phase 3 — Sink
                 gsap.to(letter, {
@@ -194,7 +223,7 @@ export function MultilingualIntro({ onComplete }: MultilingualIntroProps) {
                   x: xDrift + (Math.random() - 0.5) * 12,
                   rotation: tipAngle + (Math.random() - 0.5) * 16,
                   opacity: 0,
-                  duration: 0.5,
+                  duration: 0.44,
                   ease: "power1.out",
                   onComplete: resolve,
                 });
@@ -204,16 +233,16 @@ export function MultilingualIntro({ onComplete }: MultilingualIntroProps) {
       );
 
       await Promise.all(fallPromises);
-
-      // 4. Wait 400ms then fade out water surface over 500ms
-      await delay(400);
-      gsap.to(water, { opacity: 0, duration: 0.5, ease: "none" });
-      gsap.to(mask, { opacity: 0, duration: 0.5, ease: "none" });
+      await delay(340);
+      gsap.to(water, { opacity: 0, duration: 0.45, ease: "none" });
+      gsap.to(mask, { opacity: 0, duration: 0.45, ease: "none" });
     },
     [spawnRipple]
   );
 
-  /* ── Main intro sequence ── */
+  /* ─────────────────────────────────────────────
+     MAIN SEQUENCE
+  ───────────────────────────────────────────── */
   useEffect(() => {
     if (hasRun.current) return;
     hasRun.current = true;
@@ -221,26 +250,24 @@ export function MultilingualIntro({ onComplete }: MultilingualIntroProps) {
     const intro = introRef.current;
     if (!intro) return;
 
-    // ── sessionStorage skip ──
+    // sessionStorage skip
     if (typeof window !== "undefined" && sessionStorage.getItem("introSeen")) {
       intro.style.display = "none";
       onComplete?.();
       return;
     }
 
-    // ── prefers-reduced-motion fallback ──
+    // prefers-reduced-motion fallback
     if (
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
     ) {
       const runReduced = async () => {
-        const letters = buildLetters(WORDS[WORDS.length - 1]); // "Hello"
+        const letters = buildLetters(WORDS[WORDS.length - 1]);
         gsap.set(letters, { opacity: 1, y: 0 });
-        await delay(1000);
+        await delay(800);
         gsap.to(intro, {
-          opacity: 0,
-          duration: 0.6,
-          ease: "none",
+          opacity: 0, duration: 0.5, ease: "none",
           onComplete: () => {
             intro.style.display = "none";
             sessionStorage.setItem("introSeen", "true");
@@ -252,73 +279,58 @@ export function MultilingualIntro({ onComplete }: MultilingualIntroProps) {
       return;
     }
 
-    // ── Full intro ──
+    // Full intro (~4.5s total)
     const runIntro = async () => {
       const progress = progressRef.current;
 
-      // Animate progress bar across full duration
-      const approxDuration = WORDS.length * 1.1; // seconds (increased for longer hold)
+      // Progress bar over ~4.5s
       if (progress) {
-        gsap.to(progress, {
-          width: "100%",
-          duration: approxDuration,
-          ease: "none",
-        });
+        gsap.to(progress, { width: "100%", duration: 4.5, ease: "none" });
       }
 
-      for (let i = 0; i < WORDS.length; i++) {
-        const isFinal = i === WORDS.length - 1;
-        const letters = buildLetters(WORDS[i]);
+      const transitional = WORDS.slice(0, -1);   // first 13
+      const finalWord = WORDS[WORDS.length - 1]; // "Hello"
 
-        await staggerIn(letters);
-
-        if (!isFinal) {
-          // Hold 500ms then stagger out — longer pause for readability
-          await delay(500);
-          await staggerOut(letters);
-          await delay(100);
-        } else {
-          // HELLO: hold 500ms then river fall
-          await delay(500);
-          await riverFall(letters);
-
-          // 5. Fade out intro over 600ms, show site immediately
-          gsap.to(intro, {
-            opacity: 0,
-            duration: 0.6,
-            ease: "none",
-            onComplete: () => {
-              intro.style.display = "none";
-              sessionStorage.setItem("introSeen", "true");
-              onComplete?.();
-            },
-          });
-        }
+      // ── 13 flash words ──
+      for (const word of transitional) {
+        const span = buildWordUnit(word);
+        await flashIn(span);
+        await flashOut(span);
+        await delay(8); // micro-gap between words
       }
+
+      // ── Hello: stagger in → hold → river fall ──
+      const letters = buildLetters(finalWord);
+      await staggerIn(letters);
+      await delay(280);
+      await riverFall(letters);
+
+      // Fade intro out, reveal site
+      gsap.to(intro, {
+        opacity: 0,
+        duration: 0.55,
+        ease: "none",
+        onComplete: () => {
+          intro.style.display = "none";
+          sessionStorage.setItem("introSeen", "true");
+          onComplete?.();
+        },
+      });
     };
 
     runIntro();
-  }, [buildLetters, staggerIn, staggerOut, riverFall, onComplete]);
+  }, [buildWordUnit, buildLetters, flashIn, flashOut, staggerIn, riverFall, onComplete]);
 
   return (
     <div ref={introRef} className="ml-intro">
-      {/* Progress bar */}
       <div ref={progressRef} className="ml-intro__progress" />
-
-      {/* Purple radial glow */}
       <div className="ml-intro__glow" />
-
-      {/* Word stage */}
       <div className="ml-intro__stage">
         <div ref={wordRef} className="ml-intro__word" />
       </div>
-
-      {/* Water surface */}
       <div ref={waterRef} className="ml-intro__water">
         <svg ref={rippleSvgRef} className="ml-intro__ripple-svg" height="40" />
       </div>
-
-      {/* Sink mask */}
       <div ref={maskRef} className="ml-intro__mask" />
     </div>
   );

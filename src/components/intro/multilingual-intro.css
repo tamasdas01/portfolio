@@ -83,6 +83,12 @@
   font-size: clamp(3rem, 8vw, 7rem);
 }
 
+/* Korean */
+.ml-intro__letter--korean {
+  font-family: 'Noto Sans KR', var(--font-sans-var), sans-serif;
+  font-size: clamp(2.4rem, 6.5vw, 5.8rem);
+}
+
 /* ══════════════════════════════════════════════════════════════
    WATER SURFACE
    ══════════════════════════════════════════════════════════════ */

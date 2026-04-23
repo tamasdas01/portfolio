@@ -281,3 +281,20 @@
     min-height: 100svh;
   }
 }
+
+/* ── Accessibility: Reduced Motion ───────────────────────────────────────
+   For users who have enabled "Reduce motion" in their OS/browser settings,
+   collapse every CSS animation and transition to near-instant (0.01 ms).
+   The end state still renders correctly — the motion is just imperceptibly
+   fast so it doesn't trigger vestibular discomfort.
+   GSAP/Three.js initializations are gated separately in their components
+   via window.matchMedia('(prefers-reduced-motion: reduce)').
+   ──────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
