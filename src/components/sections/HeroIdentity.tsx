@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useIntro } from "@/providers/IntroProvider";
 import { useIsMobile } from "@/lib/use-mobile";
+import { MagneticButton } from "@/components/ui/MagneticButton";
 
 // ─────────────────────────────────────────────────────────────
 // Text-Scramble Effect
@@ -225,6 +226,7 @@ export function HeroIdentity({
                     className="mt-6 md:mt-8 flex flex-col items-center gap-4"
                 >
                     {/* Status pill / Mail Link */}
+                    <MagneticButton strength={0.3}>
                     <a
                         href="https://mail.google.com/mail/?view=cm&fs=1&to=das.tamas13@gmail.com&su=Opportunity%20-%20Off%20Campus%20Role%202026"
                         target="_blank"
@@ -252,8 +254,10 @@ export function HeroIdentity({
                             Available for 2026 SDE Roles
                         </span>
                     </a>
+                    </MagneticButton>
 
                     {/* View Resume button */}
+                    <MagneticButton strength={0.38}>
                     <a
                         href="/resume.pdf"
                         target="_blank"
@@ -277,6 +281,7 @@ export function HeroIdentity({
                             <path d="M7 17l9.2-9.2M17 17V7H7" />
                         </svg>
                     </a>
+                    </MagneticButton>
                 </motion.div>
 
                 {/* Scroll indicator */}

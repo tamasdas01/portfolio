@@ -195,6 +195,24 @@
   text-shadow: 0 0 30px currentColor, 0 0 60px rgba(255, 255, 255, 0.05);
 }
 
+/* ── Custom Cursor ─────────────────────────────────────────────────────────
+   Hides the native OS cursor on desktop when the CustomCursor component
+   is mounted (it adds .custom-cursor-active to <html>).
+   The !important ensures pointer: none elements are also hidden.
+   ──────────────────────────────────────────────────────────────────────── */
+html.custom-cursor-active,
+html.custom-cursor-active * {
+  cursor: none !important;
+}
+
+/* Ring expands + turns purple on interactive hover targets */
+html.custom-cursor-active .cursor-ring--hover {
+  width: 68px !important;
+  height: 68px !important;
+  border-color: rgba(139, 92, 246, 0.75) !important;
+  background: rgba(139, 92, 246, 0.07) !important;
+}
+
 /* === Base Styles === */
 @layer base {
   * {

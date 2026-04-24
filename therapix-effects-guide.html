@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Therapix Effects — Complete Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sage:#7C9E8F; --sage-light:#A8C5B5; --sage-dark:#4A7363;
+  --warm:#FDFAF6; --charcoal:#2C2C2C; --mid:#5A5A5A;
+  --accent:#C4956A; --accent-light:#F0DCC5;
+  --border:#E0DDD8; --section:#F4F1EC; --code-bg:#1A1D23;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--warm);color:var(--charcoal);overflow-x:hidden;cursor:none;}
+
+/* CURSOR */
+#cDot{width:10px;height:10px;background:var(--sage-dark);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:background .3s;}
+#cRing{width:38px;height:38px;border:2px solid var(--sage);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .35s,height .35s,border-color .35s,background .35s;}
+#cRing.big{width:60px;height:60px;border-color:var(--accent);background:rgba(196,149,106,.08);}
+
+/* HEADER */
+.hdr{position:sticky;top:0;background:rgba(253,250,246,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);z-index:100;padding:0 40px;height:68px;display:flex;align-items:center;justify-content:space-between;transition:box-shadow .3s;}
+.hdr.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.08);}
+.logo{font-family:'Playfair Display',serif;font-size:1.4rem;}
+.hnav{display:flex;gap:28px;}
+.hnav a{text-decoration:none;font-size:.8rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--mid);position:relative;transition:color .3s;}
+.hnav a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1.5px;background:var(--sage);transform:scaleX(0);transform-origin:left;transition:transform .3s;}
+.hnav a:hover{color:var(--sage-dark);}
+.hnav a:hover::after{transform:scaleX(1);}
+
+/* SECTIONS */
+.sect{padding:72px 48px;border-bottom:1px solid var(--border);}
+.badge{display:inline-flex;align-items:center;gap:8px;font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--sage-dark);background:rgba(124,158,143,.1);border:1px solid rgba(124,158,143,.25);padding:5px 14px;border-radius:100px;margin-bottom:16px;}
+.bdot{width:6px;height:6px;background:var(--sage);border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.5}}
+.sect-title{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3vw,2.5rem);line-height:1.15;color:var(--charcoal);margin-bottom:10px;}
+.sect-title em{color:var(--sage-dark);font-style:italic;}
+.sect-sub{font-size:.9rem;color:var(--mid);line-height:1.75;max-width:580px;margin-bottom:32px;}
+.card{background:var(--section);border:1px solid var(--border);border-radius:20px;padding:32px;margin-bottom:22px;}
+.card-lbl{font-family:'DM Mono',monospace;font-size:.65rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--sage);display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.card-lbl::before{content:'';flex:0 0 18px;height:1px;background:var(--sage-light);}
+.card-title{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--charcoal);margin-bottom:8px;}
+.card-desc{font-size:.84rem;color:var(--mid);line-height:1.75;margin-bottom:22px;max-width:580px;}
+.demo{background:white;border:1px solid var(--border);border-radius:14px;padding:32px;margin-bottom:18px;min-height:120px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:18px;overflow:hidden;position:relative;}
+pre{background:var(--code-bg);color:#A8D8A8;font-family:'DM Mono',monospace;font-size:.74rem;line-height:1.7;padding:22px;border-radius:12px;overflow-x:auto;white-space:pre;tab-size:2;}
+.code-lbl{font-family:'DM Mono',monospace;font-size:.64rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;display:block;}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--sage-dark);color:white;padding:11px 24px;border-radius:100px;border:none;font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:600;cursor:none;transition:transform .3s,box-shadow .3s,background .3s;margin-bottom:16px;}
+.btn:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(74,115,99,.3);background:var(--charcoal);}
+.btn-o{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--sage-dark);border:1.5px solid var(--sage);padding:11px 24px;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:600;cursor:none;transition:all .3s;margin-left:10px;margin-bottom:16px;}
+.btn-o:hover{background:var(--sage);color:white;}
+.sep{height:1px;background:var(--border);}
+
+/* HERO */
+.hero{min-height:90vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:72px 48px;gap:40px;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;right:-100px;top:-80px;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle,rgba(124,158,143,.18)0%,transparent 68%);pointer-events:none;animation:blobPulse 8s ease-in-out infinite;}
+@keyframes blobPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.hero-dots{position:absolute;left:53%;bottom:8%;width:160px;height:160px;opacity:.4;pointer-events:none;background-image:radial-gradient(var(--sage-light) 1.5px,transparent 1.5px);background-size:20px 20px;animation:dotDrift 10s ease-in-out infinite alternate;}
+@keyframes dotDrift{from{transform:translateY(0)}to{transform:translateY(-18px)}}
+.htag{display:inline-flex;align-items:center;gap:8px;background:rgba(124,158,143,.12);border:1px solid rgba(124,158,143,.3);border-radius:100px;padding:6px 16px;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--sage-dark);margin-bottom:20px;opacity:0;transform:translateY(20px);animation:slideUp .7s .2s cubic-bezier(.16,1,.3,1) forwards;}
+.htag .d{width:6px;height:6px;background:var(--sage);border-radius:50%;animation:pulse 2s infinite;}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.4rem,4vw,4rem);line-height:1.1;color:var(--charcoal);margin-bottom:20px;opacity:0;transform:translateY(30px);animation:slideUp .8s .4s cubic-bezier(.16,1,.3,1) forwards;}
+.hero h1 em{color:var(--sage-dark);font-style:italic;}
+.hero-p{font-size:.97rem;line-height:1.78;color:var(--mid);max-width:420px;margin-bottom:32px;opacity:0;transform:translateY(20px);animation:slideUp .7s .6s cubic-bezier(.16,1,.3,1) forwards;}
+.hero-btns{opacity:0;transform:translateY(20px);animation:slideUp .7s .75s cubic-bezier(.16,1,.3,1) forwards;}
+@keyframes slideUp{to{opacity:1;transform:translateY(0);}}
+.hero-visual{position:relative;display:flex;justify-content:center;}
+.hblob{width:360px;height:460px;border-radius:200px 200px 120px 120px;background:linear-gradient(135deg,var(--sage-light),var(--sage));box-shadow:0 40px 80px rgba(74,115,99,.22);position:relative;overflow:hidden;opacity:0;transform:scale(.9) translateY(24px);animation:blobIn .9s .5s cubic-bezier(.16,1,.3,1) forwards;}
+@keyframes blobIn{to{opacity:1;transform:scale(1) translateY(0);}}
+.hblob-inner{position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,255,255,.15)0%,transparent 55%);}
+.fc{position:absolute;background:white;border-radius:14px;padding:13px 17px;box-shadow:0 12px 40px rgba(0,0,0,.1);bottom:-14px;left:-32px;opacity:0;transform:translateY(18px);animation:slideUp .6s 1.1s cubic-bezier(.16,1,.3,1) forwards;animation-fill-mode:forwards;}
+.fc2{position:absolute;background:var(--charcoal);color:white;border-radius:14px;padding:13px 17px;box-shadow:0 12px 40px rgba(0,0,0,.15);top:32px;right:-32px;font-size:.76rem;opacity:0;transform:translateY(18px);animation:slideUp .6s 1.3s cubic-bezier(.16,1,.3,1) forwards;}
+.sn{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--sage-dark);}
+.sl{font-size:.66rem;color:var(--mid);text-transform:uppercase;letter-spacing:.06em;}
+.f2l{font-size:.63rem;opacity:.55;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;}
+.f2v{font-weight:700;font-size:.88rem;}
+.fl{animation:floating 6s ease-in-out infinite;}
+.fl2{animation:floating 6s 2s ease-in-out infinite;}
+@keyframes floating{0%,100%{transform:translateY(0)}50%{transform:translateY(-11px)}}
+
+/* 3D TILT */
+.tw-wrap2{perspective:900px;}
+.tc{width:180px;height:240px;border-radius:20px;transform-style:preserve-3d;transition:transform .12s ease,box-shadow .3s;box-shadow:0 20px 60px rgba(0,0,0,.18);position:relative;overflow:hidden;cursor:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:22px;text-align:center;color:white;}
+.tc1{background:linear-gradient(140deg,var(--sage-dark),var(--charcoal));}
+.tc2{background:linear-gradient(140deg,var(--accent),#8B5E3C);}
+.tc3{background:linear-gradient(140deg,#6B5B95,var(--charcoal));}
+.ts{position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.2),transparent 60%);}
+.ti{font-size:1.8rem;margin-bottom:4px;}
+.tc h4{font-family:'Playfair Display',serif;font-size:.98rem;font-weight:700;}
+.tc p{font-size:.7rem;opacity:.65;line-height:1.5;}
+
+/* SCROLL REVEAL */
+.rv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;width:100%;}
+.rv{background:linear-gradient(135deg,var(--section),white);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center;opacity:0;transform:translateY(44px);transition:opacity .65s cubic-bezier(.16,1,.3,1),transform .65s cubic-bezier(.16,1,.3,1);}
+.rv.on{opacity:1;transform:translateY(0);}
+.rv:nth-child(2){transition-delay:.12s;}
+.rv:nth-child(3){transition-delay:.24s;}
+.rv-i{font-size:1.5rem;margin-bottom:7px;}
+.rv h3{font-family:'Playfair Display',serif;font-size:1.02rem;color:var(--charcoal);margin-bottom:4px;}
+.rv p{font-size:.74rem;color:var(--mid);}
+
+/* PARALLAX */
+.par-box{height:190px;border-radius:14px;overflow:hidden;position:relative;background:linear-gradient(135deg,#e4f0eb,#d0e7db);display:flex;align-items:center;justify-content:center;width:100%;}
+.par-layer{position:absolute;inset:-20%;background-image:radial-gradient(var(--sage-light) 2px,transparent 2px);background-size:24px 24px;opacity:.55;}
+.par-content{position:relative;z-index:2;text-align:center;}
+.par-content h3{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--sage-dark);}
+.par-content p{font-size:.76rem;color:var(--mid);margin-top:6px;}
+
+/* COUNTERS */
+.ctr-row{display:flex;gap:36px;justify-content:center;flex-wrap:wrap;width:100%;}
+.ctr-item{text-align:center;}
+.ctr-n{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:700;color:var(--sage-dark);line-height:1;margin-bottom:5px;display:block;}
+.ctr-l{font-size:.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:.08em;}
+
+/* SKILL BARS */
+.skill{margin-bottom:18px;}
+.skill-top{display:flex;justify-content:space-between;font-size:.8rem;font-weight:600;margin-bottom:7px;}
+.skill-track{height:7px;background:var(--border);border-radius:100px;overflow:hidden;}
+.skill-fill{height:100%;background:linear-gradient(to right,var(--sage),var(--sage-dark));border-radius:100px;width:0;transition:width 1.3s cubic-bezier(.16,1,.3,1);}
+
+/* MARQUEE */
+.mq-outer{overflow:hidden;padding:14px 0;background:white;border-radius:12px;width:100%;}
+.mq-inner{display:flex;gap:40px;white-space:nowrap;width:max-content;animation:marquee 13s linear infinite;}
+.mq-inner:hover{animation-play-state:paused;}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.mi{display:flex;align-items:center;gap:9px;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mid);}
+.mi-d{width:5px;height:5px;background:var(--sage);border-radius:50%;}
+
+/* CURSOR BOX */
+.cur-box{height:130px;border-radius:14px;position:relative;overflow:hidden;cursor:none;background:linear-gradient(135deg,rgba(124,158,143,.18),rgba(196,149,106,.13));display:flex;align-items:center;justify-content:center;width:100%;}
+.cur-box span{font-size:.86rem;color:var(--charcoal);font-weight:500;pointer-events:none;}
+.cx-dot{width:10px;height:10px;background:var(--sage-dark);border-radius:50%;position:absolute;pointer-events:none;transform:translate(-50%,-50%);display:none;}
+.cx-ring{width:38px;height:38px;border:2px solid var(--sage);border-radius:50%;position:absolute;pointer-events:none;transform:translate(-50%,-50%);display:none;}
+.cur-box:hover .cx-dot,.cur-box:hover .cx-ring{display:block;}
+
+/* MAGNETIC BTN */
+.mag-b{display:inline-flex;align-items:center;gap:10px;border:2px solid var(--charcoal);padding:13px 30px;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:600;cursor:none;position:relative;overflow:hidden;color:var(--charcoal);transition:color .4s;background:transparent;}
+.mag-b::before{content:'';position:absolute;inset:0;background:var(--charcoal);border-radius:inherit;transform:scaleY(0);transform-origin:bottom;transition:transform .45s cubic-bezier(.16,1,.3,1);}
+.mag-b:hover{color:white;}
+.mag-b:hover::before{transform:scaleY(1);}
+.mag-b span{position:relative;z-index:1;}
+
+/* VIDEO */
+.vid{width:100%;height:190px;border-radius:14px;overflow:hidden;background:linear-gradient(135deg,var(--sage-dark),var(--charcoal));display:flex;align-items:center;justify-content:center;position:relative;cursor:none;}
+.vr{position:absolute;width:90px;height:90px;border-radius:50%;border:1px solid rgba(255,255,255,.25);animation:ripple 2.5s ease-out infinite;}
+.vr:nth-child(2){animation-delay:.85s;}
+.vr:nth-child(3){animation-delay:1.7s;}
+@keyframes ripple{0%{transform:scale(.7);opacity:1}100%{transform:scale(2.3);opacity:0}}
+.play-b{width:60px;height:60px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:var(--sage-dark);box-shadow:0 10px 38px rgba(0,0,0,.22);position:relative;z-index:2;transition:transform .3s,box-shadow .3s;}
+.vid:hover .play-b{transform:scale(1.12);box-shadow:0 16px 56px rgba(0,0,0,.32);}
+.modal{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.8);align-items:center;justify-content:center;backdrop-filter:blur(6px);}
+.modal.open{display:flex;animation:mFade .3s ease;}
+@keyframes mFade{from{opacity:0}to{opacity:1}}
+.mbox{background:var(--charcoal);border-radius:20px;padding:36px;max-width:420px;width:92%;text-align:center;color:white;animation:mPop .4s cubic-bezier(.16,1,.3,1);}
+@keyframes mPop{from{transform:scale(.88);opacity:0}to{transform:scale(1);opacity:1}}
+.mscreen{background:rgba(255,255,255,.07);border-radius:12px;height:150px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.3);font-size:.8rem;margin:14px 0 18px;}
+
+/* HOVER REVEAL */
+.img-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;}
+.img-card{height:120px;border-radius:14px;overflow:hidden;position:relative;cursor:none;}
+.img-bg{width:100%;height:100%;transition:transform .55s ease;}
+.img-card:hover .img-bg{transform:scale(1.08);}
+.img-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(28,28,28,.82)0%,transparent 55%);opacity:0;transition:opacity .4s;display:flex;align-items:flex-end;padding:13px;}
+.img-card:hover .img-ov{opacity:1;}
+.img-lbl{color:white;font-size:.8rem;font-weight:600;transform:translateY(10px);transition:transform .42s cubic-bezier(.16,1,.3,1);}
+.img-card:hover .img-lbl{transform:translateY(0);}
+
+/* ACCORDION */
+.acc-item{border-bottom:1px solid var(--border);}
+.acc-hdr{width:100%;background:none;border:none;text-align:left;padding:17px 0;cursor:none;display:flex;justify-content:space-between;align-items:center;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;color:var(--charcoal);}
+.acc-icon{width:27px;height:27px;border-radius:50%;background:var(--section);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.92rem;color:var(--sage-dark);flex-shrink:0;transition:transform .35s,background .3s,color .3s;}
+.acc-item.open .acc-icon{transform:rotate(45deg);background:var(--sage);color:white;}
+.acc-body{max-height:0;overflow:hidden;font-size:.84rem;color:var(--mid);line-height:1.75;transition:max-height .42s cubic-bezier(.16,1,.3,1),padding .3s;}
+.acc-item.open .acc-body{max-height:150px;padding-bottom:16px;}
+
+/* TABS */
+.tabs-bar{display:flex;gap:4px;background:var(--section);padding:4px;border-radius:100px;margin-bottom:18px;}
+.tab-b{flex:1;padding:8px 16px;border-radius:100px;border:none;background:none;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;color:var(--mid);cursor:none;transition:all .3s;}
+.tab-b.on{background:white;color:var(--sage-dark);box-shadow:0 2px 12px rgba(0,0,0,.07);}
+.tab-panel{display:none;font-size:.85rem;color:var(--mid);line-height:1.75;}
+.tab-panel.on{display:block;animation:tabFade .4s ease;}
+@keyframes tabFade{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+
+/* TYPEWRITER */
+.tw-demo{font-family:'Playfair Display',serif;font-size:2rem;color:var(--charcoal);display:flex;align-items:center;gap:5px;flex-wrap:wrap;justify-content:center;}
+.tw-word{color:var(--sage-dark);}
+.tw-cur{display:inline-block;width:2px;height:1em;background:var(--sage-dark);border-radius:1px;animation:blink 1.1s step-end infinite;vertical-align:sub;}
+@keyframes blink{50%{opacity:0}}
+
+/* STACK */
+.stack-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:24px;}
+.scard{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px;}
+.spkg{font-family:'DM Mono',monospace;font-size:.68rem;color:#4ECDC4;margin-bottom:4px;}
+.scard h4{color:white;font-size:.88rem;margin-bottom:5px;}
+.scard p{font-size:.73rem;color:rgba(255,255,255,.48);line-height:1.55;}
+
+@media(max-width:768px){
+  .hero{grid-template-columns:1fr;padding:72px 24px 48px;}
+  .hero-visual{display:none;}
+  .sect{padding:52px 22px;}
+  .rv-grid{grid-template-columns:1fr;}
+  .img-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div id="cDot"></div>
+<div id="cRing"></div>
+
+<header class="hdr" id="hdr">
+  <div class="logo">Therapix Effects</div>
+  <nav class="hnav">
+    <a href="#s-hero">Hero</a>
+    <a href="#s-3d">3D Tilt</a>
+    <a href="#s-cursor">Cursor</a>
+    <a href="#s-reveal">Reveals</a>
+    <a href="#s-more">More</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="s-hero">
+  <div class="hero-bg"></div><div class="hero-dots"></div>
+  <div>
+    <div class="htag"><span class="d"></span>Effect 01 — Hero Entry Animations</div>
+    <h1>Every Effect on <em>Therapix</em><br>Live &amp; Coded</h1>
+    <p class="hero-p">13 distinct animation effects — each with a live working demo and copy-paste code. All animations auto-play: no scrolling required.</p>
+    <div class="hero-btns">
+      <button class="btn" onclick="document.getElementById('s-3d').scrollIntoView({behavior:'smooth'})">Explore Effects ↓</button>
+      <button class="btn-o" onclick="document.getElementById('s-stack').scrollIntoView({behavior:'smooth'})">Tech Stack</button>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hblob" id="hBlob"><div class="hblob-inner"></div></div>
+    <div class="fc fl"><div class="sn">2,400+</div><div class="sl">Sessions Done</div></div>
+    <div class="fc2 fl2"><div class="f2l">Active Effects</div><div class="f2v">✦ 13 Live</div></div>
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- 3D TILT -->
+<section class="sect" id="s-3d">
+  <div class="badge"><span class="bdot"></span>Effect 02</div>
+  <h2 class="sect-title">3D Card <em>Tilt</em> + Specular Shine</h2>
+  <p class="sect-sub">Service and team cards rotate in 3D perspective as the mouse moves — up to 15° per axis. A specular highlight follows the cursor to simulate light catching a physical surface. Move your cursor over the cards below.</p>
+  <div class="card">
+    <div class="card-lbl">Live Demo — Hover the cards</div>
+    <h3 class="card-title">Mouse-Tracking 3D Perspective Tilt</h3>
+    <p class="card-desc">Uses CSS <code>perspective</code> + <code>rotateX/Y</code> driven by the mouse delta from card center. A radial-gradient shine moves with cursor position.</p>
+    <div class="demo" style="gap:22px">
+      <div class="tw-wrap2"><div class="tc tc1" data-tilt><div class="ts" id="sh0"></div><div class="ti">🧠</div><h4>Cognitive<br>Therapy</h4><p>Hover — watch 3D depth</p></div></div>
+      <div class="tw-wrap2"><div class="tc tc2" data-tilt><div class="ts" id="sh1"></div><div class="ti">💚</div><h4>Wellness<br>Program</h4><p>Shine follows cursor</p></div></div>
+      <div class="tw-wrap2"><div class="tc tc3" data-tilt><div class="ts" id="sh2"></div><div class="ti">🌿</div><h4>Mindfulness<br>Sessions</h4><p>15° max rotation</p></div></div>
+    </div>
+    <span class="code-lbl">📋 JS — 3D Tilt with Moving Shine</span>
+    <pre>document.querySelectorAll('[data-tilt]').forEach(card => {
+  const shine = card.querySelector('.shine')
+  
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect()
+    const dx = (e.clientX - r.left - r.width / 2) / (r.width / 2)
+    const dy = (e.clientY - r.top - r.height / 2) / (r.height / 2)
+
+    card.style.transform = `
+      perspective(900px)
+      rotateY(${dx * 15}deg)
+      rotateX(${-dy * 12}deg)
+      scale3d(1.05, 1.05, 1.05)
+    `
+    const px = ((e.clientX - r.left) / r.width * 100).toFixed(1)
+    const py = ((e.clientY - r.top) / r.height * 100).toFixed(1)
+    shine.style.background =
+      `radial-gradient(circle at ${px}% ${py}%,
+       rgba(255,255,255,.2), transparent 58%)`
+    shine.style.opacity = '1'
+  })
+
+  card.addEventListener('mouseleave', () => {
+    card.style.transform =
+      'perspective(900px) rotateY(0) rotateX(0) scale3d(1,1,1)'
+    shine.style.opacity = '0'
+  })
+})
+
+// One-line shortcut with VanillaTilt:
+VanillaTilt.init(document.querySelectorAll('[data-tilt]'), {
+  max: 15, speed: 400, glare: true, 'max-glare': 0.18
+})</pre>
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- CURSOR -->
+<section class="sect" id="s-cursor">
+  <div class="badge"><span class="bdot"></span>Effect 03</div>
+  <h2 class="sect-title">Custom <em>Cursor</em> — Dot + Lagged Ring</h2>
+  <p class="sect-sub">The OS cursor is hidden. Two elements take its place: a dot that snaps instantly and a larger ring that follows with lerp lag. Over interactive elements the ring expands and changes colour. The global cursor is live on this page — try hovering buttons.</p>
+  <div class="card">
+    <div class="card-lbl">Live Demo — Move cursor into this box</div>
+    <div class="demo" style="flex-direction:column;gap:14px">
+      <div class="cur-box" id="curBox">
+        <div class="cx-dot" id="cxDot"></div>
+        <div class="cx-ring" id="cxRing"></div>
+        <span>🖱 Contained cursor — dot snaps, ring lags behind</span>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+        <button class="btn">Hover → Ring Expands &amp; Changes Colour</button>
+        <button class="mag-b" id="mBtn"><span>✦ Magnetic Pull Button</span></button>
+      </div>
+    </div>
+    <span class="code-lbl">📋 Full Custom Cursor + Lerp + Magnetic</span>
+    <pre>/* CSS */
+* { cursor: none !important; }
+.cursor-dot {
+  width: 10px; height: 10px; background: #4A7363; border-radius: 50%;
+  position: fixed; pointer-events: none; z-index: 9999;
+  transform: translate(-50%, -50%);
+}
+.cursor-ring {
+  width: 38px; height: 38px; border: 2px solid rgba(74,115,99,.65);
+  border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: width .35s, height .35s, border-color .35s;
+}
+.cursor-ring.hovered {
+  width: 60px; height: 60px; border-color: #C4956A;
+  background: rgba(196,149,106,.08);
+}
+
+/* JS — lerp follow */
+let mx=0, my=0, rx=0, ry=0
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY
+  dot.style.left = mx+'px'; dot.style.top = my+'px'
+})
+function lerp(a, b, t) { return a + (b - a) * t }
+function animate() {
+  rx = lerp(rx, mx, 0.11)   // lower = more lag
+  ry = lerp(ry, my, 0.11)
+  ring.style.left = rx+'px'; ring.style.top = ry+'px'
+  requestAnimationFrame(animate)
+}
+animate()
+
+// Expand on hover
+document.querySelectorAll('a, button').forEach(el => {
+  el.addEventListener('mouseenter', () => ring.classList.add('hovered'))
+  el.addEventListener('mouseleave', () => ring.classList.remove('hovered'))
+})
+
+// Magnetic button — cursor pulls toward center
+btn.addEventListener('mousemove', e => {
+  const r = btn.getBoundingClientRect()
+  const dx = (e.clientX - r.left - r.width/2) * 0.38
+  const dy = (e.clientY - r.top - r.height/2) * 0.38
+  btn.style.transform = `translate(${dx}px, ${dy}px)`
+})
+btn.addEventListener('mouseleave', () => {
+  btn.style.transition = 'transform 0.5s cubic-bezier(.16,1,.3,1)'
+  btn.style.transform = 'translate(0,0)'
+})</pre>
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- SCROLL REVEAL -->
+<section class="sect" id="s-reveal">
+  <div class="badge"><span class="bdot"></span>Effect 04</div>
+  <h2 class="sect-title">Scroll <em>Reveal</em> — Staggered Entry</h2>
+  <p class="sect-sub">Every card, image, and heading on Therapix enters from below with opacity + Y-transform. Siblings stagger 120ms each. Click Replay to watch the animation — no scrolling needed.</p>
+  <div class="card">
+    <div class="card-lbl">Live Demo</div>
+    <button class="btn" onclick="replayRv()">▶ Replay Animation</button>
+    <div class="demo" style="align-items:stretch">
+      <div class="rv-grid">
+        <div class="rv" id="rv0"><div class="rv-i">🧠</div><h3>Anxiety</h3><p>Fades up — spring easing</p></div>
+        <div class="rv" id="rv1"><div class="rv-i">💚</div><h3>Depression</h3><p>120ms stagger after sibling</p></div>
+        <div class="rv" id="rv2"><div class="rv-i">🌿</div><h3>Trauma</h3><p>240ms delay — cascades</p></div>
+      </div>
+    </div>
+    <span class="code-lbl">📋 IntersectionObserver Scroll Reveal</span>
+    <pre>/* CSS */
+.reveal-item {
+  opacity: 0;
+  transform: translateY(48px);
+  transition:
+    opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-item.visible { opacity: 1; transform: translateY(0); }
+.reveal-item:nth-child(2) { transition-delay: 0.12s; }
+.reveal-item:nth-child(3) { transition-delay: 0.24s; }
+
+/* JS */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('visible')
+  })
+}, { threshold: 0.15 })
+document.querySelectorAll('.reveal-item').forEach(el => obs.observe(el))
+
+/* GSAP version (more control) */
+gsap.utils.toArray('.reveal-item').forEach((el, i) => {
+  gsap.fromTo(el, { y: 60, opacity: 0 }, {
+    y: 0, opacity: 1, delay: i * 0.12, duration: 0.85,
+    ease: 'power3.out',
+    scrollTrigger: { trigger: el, start: 'top 85%' }
+  })
+})</pre>
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- MORE -->
+<section class="sect" id="s-more">
+  <div class="badge"><span class="bdot"></span>Effects 05 – 13</div>
+  <h2 class="sect-title">Parallax, Counters, Bars, <em>Swiper</em> &amp; More</h2>
+
+  <!-- Parallax -->
+  <div class="card">
+    <div class="card-lbl">Effect 05 — Parallax Background Layers</div>
+    <h3 class="card-title">Scroll-Linked Depth Parallax</h3>
+    <p class="card-desc">Background dot grids, blob shapes, and geometric SVGs scroll at 0.3× the speed of content. Scroll the page and watch the dot layer shift relative to the text.</p>
+    <div class="demo" style="padding:0;overflow:hidden;border-radius:12px">
+      <div class="par-box" id="parBox">
+        <div class="par-layer" id="parLayer"></div>
+        <div class="par-content"><h3>Parallax Background</h3><p>Dot grid moves at 0.3× scroll speed vs content</p></div>
+      </div>
+    </div>
+    <span class="code-lbl">📋 3 Ways to Implement Parallax</span>
+    <pre>/* Method 1 — Pure JS */
+window.addEventListener('scroll', () => {
+  const y = window.scrollY
+  bgLayer.style.transform  = `translateY(${y * 0.3}px)`  // slow
+  midLayer.style.transform = `translateY(${y * 0.55}px)` // medium
+})
+
+/* Method 2 — GSAP scrub (smoothest) */
+gsap.to('.parallax-bg', {
+  yPercent: -30,
+  ease: 'none',
+  scrollTrigger: {
+    trigger: '.section',
+    start: 'top bottom', end: 'bottom top',
+    scrub: true  // 1:1 scroll, or scrub: 1.5 adds inertia lag
+  }
+})
+
+/* Method 3 — Rellax.js (simplest) */
+import Rellax from 'rellax'
+new Rellax('.rellax', { speed: -4, center: true })
+// HTML: &lt;div class="rellax" data-rellax-speed="-3"&gt;&lt;/div&gt;</pre>
+  </div>
+
+  <!-- Counters -->
+  <div class="card">
+    <div class="card-lbl">Effect 06 — Animated Number Counter</div>
+    <h3 class="card-title">Count-Up on Scroll (Auto-playing)</h3>
+    <button class="btn" onclick="runCounters()">▶ Re-run Counters</button>
+    <div class="demo">
+      <div class="ctr-row">
+        <div class="ctr-item"><span class="ctr-n" data-t="2400" id="c0">0</span><div class="ctr-l">Sessions</div></div>
+        <div class="ctr-item"><span class="ctr-n" data-t="98" id="c1">0</span><div class="ctr-l">% Success</div></div>
+        <div class="ctr-item"><span class="ctr-n" data-t="15" id="c2">0</span><div class="ctr-l">Years</div></div>
+        <div class="ctr-item"><span class="ctr-n" data-t="4200" id="c3">0</span><div class="ctr-l">Clients</div></div>
+      </div>
+    </div>
+    <span class="code-lbl">📋 Count-Up Function</span>
+    <pre>function animateCounter(el, target, duration = 1800) {
+  let startTime = null
+  const step = (ts) => {
+    if (!startTime) startTime = ts
+    const p = Math.min((ts - startTime) / duration, 1)
+    const eased = 1 - Math.pow(1 - p, 3)   // ease-out cubic
+    el.textContent = Math.floor(eased * target).toLocaleString()
+    if (p &lt; 1) requestAnimationFrame(step)
+    else el.textContent = target.toLocaleString()
+  }
+  requestAnimationFrame(step)
+}
+
+// Trigger via IntersectionObserver
+const obs = new IntersectionObserver(entries => {
+  if (entries[0].isIntersecting) {
+    document.querySelectorAll('[data-target]').forEach(el =>
+      animateCounter(el, +el.dataset.target)
+    )
+    obs.disconnect()
+  }
+}, { threshold: 0.4 })
+obs.observe(statsSection)</pre>
+  </div>
+
+  <!-- Skill Bars -->
+  <div class="card">
+    <div class="card-lbl">Effect 07 — Progress Bars</div>
+    <h3 class="card-title">Animated Skill / Specialization Bars</h3>
+    <button class="btn" onclick="runBars()">▶ Animate Bars</button>
+    <div class="demo" style="flex-direction:column;align-items:stretch">
+      <div class="skill"><div class="skill-top"><span>Cognitive Behavioral Therapy</span><span>92%</span></div><div class="skill-track"><div class="skill-fill" data-w="92" id="sb0"></div></div></div>
+      <div class="skill"><div class="skill-top"><span>Family Counseling</span><span>85%</span></div><div class="skill-track"><div class="skill-fill" data-w="85" id="sb1"></div></div></div>
+      <div class="skill"><div class="skill-top"><span>Trauma Recovery (EMDR)</span><span>78%</span></div><div class="skill-track"><div class="skill-fill" data-w="78" id="sb2"></div></div></div>
+    </div>
+  </div>
+
+  <!-- Marquee -->
+  <div class="card">
+    <div class="card-lbl">Effect 08 — Infinite Marquee + Swiper.js</div>
+    <h3 class="card-title">Auto-Scroll Ticker — Hover to Pause</h3>
+    <div class="demo" style="padding:0;overflow:hidden;border-radius:12px">
+      <div class="mq-outer">
+        <div class="mq-inner">
+          <div class="mi"><span class="mi-d"></span>Cognitive Therapy</div>
+          <div class="mi"><span class="mi-d"></span>Trauma Recovery</div>
+          <div class="mi"><span class="mi-d"></span>Family Counseling</div>
+          <div class="mi"><span class="mi-d"></span>Anxiety Support</div>
+          <div class="mi"><span class="mi-d"></span>EMDR Therapy</div>
+          <div class="mi"><span class="mi-d"></span>Online Sessions</div>
+          <div class="mi"><span class="mi-d"></span>Group Therapy</div>
+          <div class="mi"><span class="mi-d"></span>Cognitive Therapy</div>
+          <div class="mi"><span class="mi-d"></span>Trauma Recovery</div>
+          <div class="mi"><span class="mi-d"></span>Family Counseling</div>
+          <div class="mi"><span class="mi-d"></span>Anxiety Support</div>
+          <div class="mi"><span class="mi-d"></span>EMDR Therapy</div>
+          <div class="mi"><span class="mi-d"></span>Online Sessions</div>
+          <div class="mi"><span class="mi-d"></span>Group Therapy</div>
+        </div>
+      </div>
+    </div>
+    <span class="code-lbl" style="margin-top:16px;display:block">📋 CSS Marquee + Swiper.js Setup</span>
+    <pre>/* CSS Marquee — duplicate items for seamless loop */
+.marquee-inner {
+  display: flex; gap: 40px; width: max-content;
+  animation: ticker 14s linear infinite;
+}
+.marquee-inner:hover { animation-play-state: paused; }
+@keyframes ticker {
+  from { transform: translateX(0) }
+  to   { transform: translateX(-50%) }
+}
+
+/* Swiper.js (used in Therapix for testimonials) */
+import Swiper from 'swiper'
+import { Autoplay, Pagination } from 'swiper/modules'
+new Swiper('.swiper', {
+  modules: [Autoplay, Pagination],
+  loop: true, slidesPerView: 1.2, spaceBetween: 24,
+  autoplay: { delay: 3500, pauseOnMouseEnter: true },
+  pagination: { el: '.swiper-pagination', clickable: true }
+})</pre>
+  </div>
+
+  <!-- Video Popup -->
+  <div class="card">
+    <div class="card-lbl">Effect 09 — Video Popup Lightbox</div>
+    <h3 class="card-title">Ripple Play Button + Blur Modal</h3>
+    <div class="demo">
+      <div class="vid" onclick="document.getElementById('vm').classList.add('open')" style="width:100%">
+        <div class="vr"></div><div class="vr"></div><div class="vr"></div>
+        <div class="play-b">▶</div>
+        <div style="position:absolute;bottom:12px;right:16px;font-size:.7rem;color:rgba(255,255,255,.45)">Click to open modal</div>
+      </div>
+    </div>
+    <span class="code-lbl">📋 Ripple + Modal</span>
+    <pre>/* CSS ripple rings */
+.ripple {
+  position: absolute; width: 90px; height: 90px;
+  border-radius: 50%; border: 1px solid rgba(255,255,255,.25);
+  animation: ripple 2.5s ease-out infinite;
+}
+.ripple:nth-child(2) { animation-delay: .85s; }
+.ripple:nth-child(3) { animation-delay: 1.7s; }
+@keyframes ripple {
+  0%   { transform: scale(.7); opacity: 1 }
+  100% { transform: scale(2.3); opacity: 0 }
+}
+
+/* Modal */
+.modal { position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,.82); backdrop-filter: blur(6px);
+  display: none; align-items: center; justify-content: center; }
+.modal.open { display: flex; animation: fadeIn .3s ease; }
+.modal-box { animation: scaleIn .4s cubic-bezier(.16,1,.3,1); }
+@keyframes scaleIn { from{transform:scale(.88);opacity:0} to{transform:scale(1);opacity:1} }</pre>
+  </div>
+
+  <!-- Image Hover Reveal -->
+  <div class="card">
+    <div class="card-lbl">Effect 10 — Image Hover Overlay Reveal</div>
+    <h3 class="card-title">Scale + Slide-Up Text on Hover</h3>
+    <p class="card-desc">Service, blog, and team cards scale their image to 108% while revealing an overlay text from below. Hover each card.</p>
+    <div class="demo">
+      <div class="img-grid">
+        <div class="img-card"><div class="img-bg" style="background:linear-gradient(135deg,#7C9E8F,#4A7363)"></div><div class="img-ov"><span class="img-lbl">→ Anxiety Programs</span></div></div>
+        <div class="img-card"><div class="img-bg" style="background:linear-gradient(135deg,#C4956A,#8B5E3C)"></div><div class="img-ov"><span class="img-lbl">→ Trauma Therapy</span></div></div>
+        <div class="img-card"><div class="img-bg" style="background:linear-gradient(135deg,#6B5B95,#2C2C2C)"></div><div class="img-ov"><span class="img-lbl">→ Couples Sessions</span></div></div>
+        <div class="img-card"><div class="img-bg" style="background:linear-gradient(135deg,#A8C5B5,#7C9E8F)"></div><div class="img-ov"><span class="img-lbl">→ Child Therapy</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Typewriter -->
+  <div class="card">
+    <div class="card-lbl">Effect 11 — Typewriter Hero Text (Auto-playing)</div>
+    <h3 class="card-title">Rotating Word Typewriter — Zero Dependencies</h3>
+    <div class="demo"><div class="tw-demo">Healing your&nbsp;<span class="tw-word" id="twEl"></span><span class="tw-cur"></span></div></div>
+    <span class="code-lbl">📋 Typewriter — Pure JS</span>
+    <pre>const words = ['Mind.', 'Body.', 'Soul.', 'Life.']
+let wi = 0, ci = 0, isDeleting = false
+
+function type() {
+  const word = words[wi]
+  if (!isDeleting) {
+    el.textContent = word.slice(0, ++ci)
+    if (ci === word.length) {
+      isDeleting = true
+      setTimeout(type, 1600)   // pause at full word
+      return
+    }
+    setTimeout(type, 90)       // type speed
+  } else {
+    el.textContent = word.slice(0, --ci)
+    if (ci === 0) {
+      isDeleting = false
+      wi = (wi + 1) % words.length
+    }
+    setTimeout(type, 52)       // delete faster
+  }
+}
+type()</pre>
+  </div>
+
+  <!-- Accordion + Tabs -->
+  <div class="card">
+    <div class="card-lbl">Effect 12 — Tabs + Effect 13 — Accordion</div>
+    <h3 class="card-title">Pill Tabs with Fade + Max-Height Accordion</h3>
+    <div class="demo" style="flex-direction:column;align-items:stretch;gap:28px">
+      <div>
+        <div class="tabs-bar">
+          <button class="tab-b on" onclick="switchTab(0,this)">Individual</button>
+          <button class="tab-b" onclick="switchTab(1,this)">Couples</button>
+          <button class="tab-b" onclick="switchTab(2,this)">Groups</button>
+        </div>
+        <div id="tps">
+          <div class="tab-panel on">One-on-one therapy using CBT, DBT, and mindfulness techniques. Fully personalised to your journey with weekly progress tracking.</div>
+          <div class="tab-panel">Couples therapy focused on communication, trust, and rebuilding connection through structured evidence-based frameworks.</div>
+          <div class="tab-panel">Peer groups working through similar challenges. Group dynamics provide unique shared insights and collective healing support.</div>
+        </div>
+      </div>
+      <div>
+        <div class="acc-item" id="a1"><button class="acc-hdr" onclick="toggleAcc('a1')">How long does a session last? <div class="acc-icon">+</div></button><div class="acc-body">Standard sessions are 50 minutes. Extended 90-minute sessions are available for couples or intensive therapeutic work.</div></div>
+        <div class="acc-item" id="a2"><button class="acc-hdr" onclick="toggleAcc('a2')">Is online therapy available? <div class="acc-icon">+</div></button><div class="acc-body">Yes — all therapists offer secure HIPAA-compliant video sessions. Available from anywhere in the world.</div></div>
+        <div class="acc-item" id="a3"><button class="acc-hdr" onclick="toggleAcc('a3')">What is the cancellation policy? <div class="acc-icon">+</div></button><div class="acc-body">24-hour notice required. Late cancellations may incur 50% of the session fee. Genuine emergencies handled individually with full empathy.</div></div>
+      </div>
+    </div>
+    <span class="code-lbl">📋 Accordion — Max-Height Trick</span>
+    <pre>/* CSS — animate max-height (NOT height, which can't be animated) */
+.acc-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.42s cubic-bezier(0.16,1,0.3,1),
+              padding 0.3s ease;
+}
+.acc-item.open .acc-body {
+  max-height: 300px;    /* must be LARGER than actual content */
+  padding-bottom: 18px;
+}
+
+/* JS */
+function toggleAccordion(id) {
+  const item = document.getElementById(id)
+  const wasOpen = item.classList.contains('open')
+  document.querySelectorAll('.acc-item')
+    .forEach(i => i.classList.remove('open'))
+  if (!wasOpen) item.classList.add('open')
+}</pre>
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- SMOOTH SCROLL SECTION -->
+<section class="sect" id="s-lenis">
+  <div class="badge"><span class="bdot"></span>Bonus Effect</div>
+  <h2 class="sect-title">Lenis Smooth <em>Momentum</em> Scroll</h2>
+  <p class="sect-sub">The very first sensation on Therapix — the page <em>glides</em> instead of snapping. Lenis replaces native scroll with inertia-eased movement. This is why every section feels like it breathes into view.</p>
+  <div class="card">
+    <span class="code-lbl">📋 Full Lenis Setup</span>
+    <pre>npm install @studio-freight/lenis
+
+import Lenis from '@studio-freight/lenis'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
+
+const lenis = new Lenis({
+  duration: 1.2,
+  easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+  smoothWheel: true,
+  wheelMultiplier: 0.85,
+})
+
+// Sync GSAP ScrollTrigger
+lenis.on('scroll', ScrollTrigger.update)
+gsap.ticker.add(time => lenis.raf(time * 1000))
+gsap.ticker.lagSmoothing(0)
+
+function raf(time) {
+  lenis.raf(time)
+  requestAnimationFrame(raf)
+}
+requestAnimationFrame(raf)</pre>
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- STACK -->
+<section class="sect" id="s-stack" style="background:var(--charcoal);">
+  <div class="badge" style="background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.15);color:var(--sage-light)"><span class="bdot"></span>Full Tech Stack</div>
+  <h2 class="sect-title" style="color:white">Every <em>Library</em> You Need</h2>
+  <p class="sect-sub" style="color:rgba(255,255,255,.5)">One npm install, one init file. Each effect maps to exactly one tool.</p>
+  <div class="stack-grid">
+    <div class="scard"><div class="spkg">npm i @studio-freight/lenis</div><h4>Lenis.js</h4><p>Smooth momentum scroll. The #1 reason Therapix feels "floaty".</p></div>
+    <div class="scard"><div class="spkg">npm i gsap</div><h4>GSAP + ScrollTrigger</h4><p>Scroll-reveal, parallax scrub, staggered entry. Industry gold standard.</p></div>
+    <div class="scard"><div class="spkg">npm i swiper</div><h4>Swiper.js</h4><p>In theme credits. Powers all carousels — testimonials, services, team.</p></div>
+    <div class="scard"><div class="spkg">npm i vanilla-tilt</div><h4>VanillaTilt.js</h4><p>3D card tilt + glare in one line of JS. Or build it yourself in 30 lines.</p></div>
+    <div class="scard"><div class="spkg">npm i rellax</div><h4>Rellax.js</h4><p>Simplest parallax. Data attributes on elements — no JS config needed.</p></div>
+    <div class="scard"><div class="spkg">CSS only</div><h4>Infinite Marquee</h4><p>Pure @keyframes translateX(-50%). Duplicate items. Zero JS required.</p></div>
+    <div class="scard"><div class="spkg">Browser API — free</div><h4>IntersectionObserver</h4><p>Scroll reveal with no library. Add GSAP for more precise timing control.</p></div>
+    <div class="scard"><div class="spkg">35 lines JS + CSS</div><h4>Custom Cursor</h4><p>Dot + lagged ring via lerp. Magnetic pull on buttons. Zero dependencies.</p></div>
+    <div class="scard"><div class="spkg">CSS max-height trick</div><h4>Accordion</h4><p>Animate max-height: 0 → fixed large value. Only reliable CSS approach.</p></div>
+  </div>
+  <div style="margin-top:32px;background:rgba(255,255,255,.04);border-radius:16px;border:1px solid rgba(255,255,255,.08);padding:24px">
+    <span class="code-lbl">📋 One-shot install + master init order</span>
+    <pre style="background:transparent;padding:0;color:rgba(168,216,168,.9)">npm install @studio-freight/lenis gsap swiper vanilla-tilt rellax
+
+/* main.js — order matters */
+import Lenis from '@studio-freight/lenis'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import Swiper from 'swiper'
+import VanillaTilt from 'vanilla-tilt'
+import Rellax from 'rellax'
+
+gsap.registerPlugin(ScrollTrigger)
+
+// 1. Smooth scroll (always first)
+const lenis = new Lenis({ duration: 1.2 })
+lenis.on('scroll', ScrollTrigger.update)
+gsap.ticker.add(t => lenis.raf(t * 1000))
+
+// 2. Custom cursor
+initCursor()
+
+// 3. Scroll reveals
+gsap.utils.toArray('.reveal').forEach((el, i) => {
+  gsap.fromTo(el, { y: 60, opacity: 0 }, {
+    y: 0, opacity: 1, delay: i * 0.12, duration: 0.85,
+    ease: 'power3.out',
+    scrollTrigger: { trigger: el, start: 'top 85%' }
+  })
+})
+
+// 4. Parallax
+new Rellax('.parallax-bg', { speed: -4, center: true })
+
+// 5. 3D tilt
+VanillaTilt.init(document.querySelectorAll('[data-tilt]'), {
+  max: 15, speed: 400, glare: true, 'max-glare': 0.18
+})
+
+// 6. Swiper carousels
+new Swiper('.testimonials', {
+  loop: true, autoplay: { delay: 3500, pauseOnMouseEnter: true }
+})
+
+// 7. Counters + progress bars via IntersectionObserver
+initCounters()
+initProgressBars()
+
+// 8. Typewriter
+startTypewriter(['Mind.', 'Body.', 'Soul.', 'Life.'])</pre>
+  </div>
+</section>
+
+<!-- Video Modal -->
+<div class="modal" id="vm" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="mbox" style="position:relative">
+    <button style="position:absolute;top:12px;right:16px;font-size:1.3rem;background:none;border:none;color:white;cursor:none" onclick="document.getElementById('vm').classList.remove('open')">✕</button>
+    <div style="font-family:'Playfair Display',serif;font-size:1.25rem;color:white;margin-bottom:4px">Video Lightbox</div>
+    <div style="font-size:.76rem;color:rgba(255,255,255,.4);margin-bottom:2px">backdrop-filter blur + scale-in spring animation</div>
+    <div class="mscreen">[ YouTube / Vimeo iframe ]</div>
+    <button class="btn" onclick="document.getElementById('vm').classList.remove('open')">Close Modal</button>
+  </div>
+</div>
+
+<script>
+// ── GLOBAL CURSOR ──
+const cDot=document.getElementById('cDot'),cRing=document.getElementById('cRing')
+let mx=window.innerWidth/2,my=window.innerHeight/2,rx=mx,ry=my
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cDot.style.left=mx+'px';cDot.style.top=my+'px'})
+;(function aC(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;cRing.style.left=rx+'px';cRing.style.top=ry+'px';requestAnimationFrame(aC)})()
+document.querySelectorAll('a,button,.tc,.vid,.img-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cRing.classList.add('big'))
+  el.addEventListener('mouseleave',()=>cRing.classList.remove('big'))
+})
+
+// ── HEADER ──
+window.addEventListener('scroll',()=>document.getElementById('hdr').classList.toggle('scrolled',scrollY>50))
+
+// ── HERO BLOB MOUSE TILT ──
+const hb=document.getElementById('hBlob')
+document.addEventListener('mousemove',e=>{
+  if(!hb)return
+  const dx=(e.clientX/innerWidth-.5)*8,dy=(e.clientY/innerHeight-.5)*5
+  hb.style.transform=`perspective(1000px) rotateY(${dx}deg) rotateX(${-dy}deg)`
+})
+
+// ── 3D TILT ──
+document.querySelectorAll('[data-tilt]').forEach(card=>{
+  const sh=card.querySelector('.ts')
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect()
+    const dx=(e.clientX-r.left-r.width/2)/(r.width/2)
+    const dy=(e.clientY-r.top-r.height/2)/(r.height/2)
+    card.style.transform=`perspective(900px) rotateY(${dx*15}deg) rotateX(${-dy*12}deg) scale3d(1.05,1.05,1.05)`
+    if(sh){const px=((e.clientX-r.left)/r.width*100).toFixed(1),py=((e.clientY-r.top)/r.height*100).toFixed(1);sh.style.background=`radial-gradient(circle at ${px}% ${py}%,rgba(255,255,255,.2),transparent 58%)`;sh.style.opacity='1'}
+  })
+  card.addEventListener('mouseleave',()=>{card.style.transform='perspective(900px) rotateY(0) rotateX(0) scale3d(1,1,1)';if(sh)sh.style.opacity='0'})
+})
+
+// ── CONTAINED CURSOR ──
+const curBox=document.getElementById('curBox'),cxDot=document.getElementById('cxDot'),cxRing=document.getElementById('cxRing')
+if(curBox){
+  let cx=0,cy=0,crx=0,cry=0
+  curBox.addEventListener('mousemove',e=>{const r=curBox.getBoundingClientRect();cx=e.clientX-r.left;cy=e.clientY-r.top;cxDot.style.left=cx+'px';cxDot.style.top=cy+'px'})
+  ;(function aCD(){crx+=(cx-crx)*.11;cry+=(cy-cry)*.11;cxRing.style.left=crx+'px';cxRing.style.top=cry+'px';requestAnimationFrame(aCD)})()
+}
+
+// ── MAGNETIC BUTTON ──
+const mBtn=document.getElementById('mBtn')
+if(mBtn){
+  mBtn.addEventListener('mousemove',e=>{const r=mBtn.getBoundingClientRect();const dx=(e.clientX-r.left-r.width/2)*.38,dy=(e.clientY-r.top-r.height/2)*.38;mBtn.style.transition='transform .1s';mBtn.style.transform=`translate(${dx}px,${dy}px)`})
+  mBtn.addEventListener('mouseleave',()=>{mBtn.style.transition='transform .5s cubic-bezier(.16,1,.3,1)';mBtn.style.transform='translate(0,0)'})
+}
+
+// ── SCROLL REVEAL ──
+function replayRv(){
+  ['rv0','rv1','rv2'].forEach(id=>document.getElementById(id)?.classList.remove('on'))
+  setTimeout(()=>{
+    document.getElementById('rv0')?.classList.add('on')
+    setTimeout(()=>document.getElementById('rv1')?.classList.add('on'),120)
+    setTimeout(()=>document.getElementById('rv2')?.classList.add('on'),240)
+  },80)
+}
+setTimeout(replayRv,700)
+
+// ── PARALLAX ──
+const parBox=document.getElementById('parBox'),parLayer=document.getElementById('parLayer')
+window.addEventListener('scroll',()=>{
+  if(!parBox||!parLayer)return
+  const rect=parBox.getBoundingClientRect()
+  const p=(innerHeight-rect.top)/(innerHeight+rect.height)
+  parLayer.style.transform=`translateY(${(p-.5)*50}px)`
+})
+
+// ── COUNTERS ──
+function animCount(el,target,dur=1800){
+  let t0=null;const s=ts=>{if(!t0)t0=ts;const p=Math.min((ts-t0)/dur,1);const e=1-Math.pow(1-p,3);el.textContent=Math.floor(e*target).toLocaleString();if(p<1)requestAnimationFrame(s);else el.textContent=target.toLocaleString()};requestAnimationFrame(s)
+}
+function runCounters(){['c0','c1','c2','c3'].forEach(id=>{const el=document.getElementById(id);if(el)animCount(el,parseInt(el.dataset.t))})}
+setTimeout(runCounters,900)
+
+// ── SKILL BARS ──
+function runBars(){document.querySelectorAll('.skill-fill').forEach(b=>{b.style.width='0';setTimeout(()=>{b.style.width=b.dataset.w+'%'},60)})}
+setTimeout(runBars,750)
+
+// ── TABS ──
+function switchTab(i,btn){
+  document.querySelectorAll('.tab-b').forEach((b,j)=>b.classList.toggle('on',i===j))
+  document.querySelectorAll('#tps .tab-panel').forEach((p,j)=>p.classList.toggle('on',i===j))
+}
+
+// ── ACCORDION ──
+function toggleAcc(id){const item=document.getElementById(id);const was=item.classList.contains('open');document.querySelectorAll('.acc-item').forEach(i=>i.classList.remove('open'));if(!was)item.classList.add('open')}
+
+// ── TYPEWRITER ──
+const twEl=document.getElementById('twEl')
+const words=['Mind.','Body.','Soul.','Life.']
+let wi=0,ci=0,del=false
+function typeIt(){if(!twEl)return;const w=words[wi];if(!del){twEl.textContent=w.slice(0,++ci);if(ci===w.length){del=true;setTimeout(typeIt,1600);return}setTimeout(typeIt,92)}else{twEl.textContent=w.slice(0,--ci);if(ci===0){del=false;wi=(wi+1)%words.length}setTimeout(typeIt,52)}}
+typeIt()
+</script>
+</body>
+</html>

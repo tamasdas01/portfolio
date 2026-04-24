@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Playfair_Display } from "next/font/google";
 import { IntroProvider } from "@/providers/IntroProvider";
 import { LenisProvider } from "@/providers/LenisProvider";
+import { CustomCursor } from "@/components/ui/CustomCursor";
 import "./globals.css";
 
 const sans = Inter({
@@ -42,6 +43,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`dark ${sans.variable} ${mono.variable} ${display.variable}`}>
       <body className="font-sans text-text-primary antialiased">
+        <CustomCursor />
         <IntroProvider>
           <LenisProvider>{children}</LenisProvider>
         </IntroProvider>
