@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { PLACEHOLDER_WORKS } from "@/lib/projects";
 
-const BASE_URL = "https://tamasdas.dev";
+const BASE_URL = "https://portfolio-tamas.vercel.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   // Static routes
