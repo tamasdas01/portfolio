@@ -22,7 +22,7 @@ export function Footer() {
                             </a>
                             <span className="text-white/10">·</span>
                             <a
-                                href="/resume.pdf"
+                                href="/resume.pdf?v=2"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-accent/60 hover:text-accent transition-colors"

@@ -59,7 +59,7 @@ const items = [
                 I&apos;m currently open to freelance projects and full-time SDE roles starting 2026. If you&apos;re building something worth building — reach out. I respond to every serious message.
                 <span className="flex flex-col sm:flex-row sm:items-center gap-3 mt-3">
                     <a
-                        href="/resume.pdf"
+                        href="/resume.pdf?v=2"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 font-mono text-xs text-accent hover:underline underline-offset-4"

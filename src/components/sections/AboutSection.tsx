@@ -179,7 +179,7 @@ export const AboutSection = () => {
                             Currently seeking full-time software engineering roles starting in 2026.
                         </p>
                         <a
-                            href="/resume.pdf"
+                            href="/resume.pdf?v=2"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-2 font-mono text-xs text-accent/70 hover:text-accent transition-colors underline underline-offset-4"
