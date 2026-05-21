@@ -33,6 +33,9 @@ export const metadata: Metadata = {
     description: "I craft digital experiences with clarity, intention, and zero fluff.",
     type: "website",
   },
+  verification: {
+    google: "JdgvqgjiD3XNFuWNUqOV1Wad3DCGSluVgTRlECFPhlw",
+  },
 };
 
 export default function RootLayout({
