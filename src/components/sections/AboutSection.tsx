@@ -82,12 +82,12 @@ export const AboutSection = () => {
                 {/* ─── Left Column: Portrait + Scanning Animation ─── */}
                 <motion.div variants={fadeUp} className="relative mx-auto lg:mx-0 w-full max-w-[420px]">
                     {/* Glow halo behind the image */}
+                    {/* (was a 40px CSS blur — the wider, softer gradient looks the same at no GPU cost) */}
                     <div
-                        className="absolute inset-0 rounded-3xl"
+                        className="absolute -inset-10 rounded-3xl"
                         style={{
                             background:
-                                "radial-gradient(ellipse 70% 40% at 50% 30%, rgba(196,240,70,0.08) 0%, transparent 70%)",
-                            filter: "blur(40px)",
+                                "radial-gradient(ellipse 60% 38% at 50% 32%, rgba(196,240,70,0.07) 0%, rgba(196,240,70,0.03) 45%, transparent 75%)",
                         }}
                     />
 
@@ -95,8 +95,8 @@ export const AboutSection = () => {
                     <div
                         className="relative rounded-3xl overflow-hidden"
                         style={{
+                            // (backdrop blur removed — the portrait fully covers this card)
                             background: "rgba(17,17,17,0.6)",
-                            backdropFilter: "blur(12px)",
                             border: "1px solid rgba(255,255,255,0.06)",
                             boxShadow: "0 8px 40px rgba(0,0,0,0.4)",
                         }}
@@ -105,7 +105,7 @@ export const AboutSection = () => {
                         <div className="relative aspect-[3/4] overflow-hidden rounded-3xl">
                             <Image
                                 src="/projects/me.webp"
-                                alt="Portrait"
+                                alt="Tamas Das, creative full-stack developer based in Kolkata, India"
                                 fill
                                 sizes="(max-width: 768px) 90vw, 420px"
                                 className="object-cover object-top"
@@ -154,8 +154,8 @@ export const AboutSection = () => {
                     {/* Description paragraphs */}
                     <motion.div variants={fadeUp} className="space-y-5 text-[15px] md:text-base leading-relaxed text-text-secondary">
                         <p>
-                            I&apos;m a self-taught Full Stack Developer focused on building high-performance,
-                            real-world web applications. I work across the entire stack—from clean, scalable
+                            I&apos;m Tamas Das, a self-taught full-stack developer based in Kolkata, India,
+                            focused on building high-performance, real-world web applications. I work across the entire stack—from clean, scalable
                             backend architecture to fast, intuitive front-end interfaces that feel deliberate
                             and refined.
                         </p>

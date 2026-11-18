@@ -41,9 +41,13 @@ interface LinkBoxProps {
     Icon?: React.ComponentType<{ className?: string }>;
     href: string;
     label?: string;
+    /** Accessible name — icon-only links otherwise have no text for screen readers / crawlers. */
+    ariaLabel: string;
+    /** rel="me" marks the link as one of Tamas's own profiles (identity signal). */
+    isProfile?: boolean;
 }
 
-function LinkBox({ Icon, href, label }: LinkBoxProps) {
+function LinkBox({ Icon, href, label, ariaLabel, isProfile }: LinkBoxProps) {
     const [scope, animate] = useAnimate();
 
     const getNearestSide = (e: React.MouseEvent) => {
@@ -74,7 +78,9 @@ function LinkBox({ Icon, href, label }: LinkBoxProps) {
         <a
             href={href}
             target={href.startsWith("mailto:") ? undefined : "_blank"}
-            rel={href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
+            rel={href.startsWith("mailto:") ? undefined : `${isProfile ? "me " : ""}noopener noreferrer`}
+            aria-label={ariaLabel}
+            title={ariaLabel}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             className="relative grid h-20 w-full place-content-center sm:h-28 md:h-36"
@@ -124,17 +130,20 @@ export function ClipPathLinks() {
                 <LinkBox
                     Icon={Mail}
                     href="https://mail.google.com/mail/?view=cm&fs=1&to=das.tamas13@gmail.com"
+                    ariaLabel="Email Tamas Das"
                 />
                 <LinkBox
                     Icon={Github}
                     href="https://github.com/tamasdas01"
+                    ariaLabel="Tamas Das on GitHub"
+                    isProfile
                 />
             </div>
 
             {/* Row 2: 2 columns — LinkedIn + Instagram */}
             <div className="grid grid-cols-2 divide-x divide-white/[0.08]">
-                <LinkBox Icon={Linkedin} href="https://www.linkedin.com/in/tamas-das-12a6a6288" />
-                <LinkBox Icon={Instagram} href="https://www.instagram.com/_tammy_anonymous_?igsh=MWgyNGxuNXFzZnBnaQ==" />
+                <LinkBox Icon={Linkedin} href="https://www.linkedin.com/in/tamas-das-12a6a6288" ariaLabel="Tamas Das on LinkedIn" isProfile />
+                <LinkBox Icon={Instagram} href="https://www.instagram.com/_tammy_anonymous_" ariaLabel="Tamas Das on Instagram" isProfile />
             </div>
         </div>
     );

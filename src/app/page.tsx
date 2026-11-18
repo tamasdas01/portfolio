@@ -1,7 +1,7 @@
 import { IntroSequence } from "@/components/intro/IntroSequence";
 import { Header } from "@/components/ui/Header";
 import { Footer } from "@/components/ui/Footer";
-import { DottedSurface } from "@/components/ui/dotted-surface";
+import { BackgroundSurface } from "@/components/ui/BackgroundSurface";
 import { HeroIdentity } from "@/components/sections/HeroIdentity";
 import { StatementSection } from "@/components/sections/StatementSection";
 import { SelectedWork } from "@/components/sections/SelectedWork";
@@ -10,12 +10,17 @@ import { CinematicProcess } from "@/components/sections/CinematicProcess";
 import { MindMap } from "@/components/sections/MindMap";
 import { BeyondWorkSection } from "@/components/sections/BeyondWorkSection";
 import { Contact } from "@/components/sections/Contact";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { PLACEHOLDER_WORKS } from "@/lib/projects";
+import { homeGraph } from "@/lib/structured-data";
 
 export default function Home() {
   return (
     <>
+      <JsonLd data={homeGraph(PLACEHOLDER_WORKS)} />
+
       {/* Fixed Three.js dotted wave background — z-index: 0 */}
-      <DottedSurface />
+      <BackgroundSurface />
 
       {/* All page content sits above the dotted surface — z-index: 1 */}
       <div style={{ position: "relative", zIndex: 1 }}>

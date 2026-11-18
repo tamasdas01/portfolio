@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 import { useTransform, motion, useScroll, MotionValue } from 'motion/react';
 import { useRef, forwardRef } from 'react';
 
@@ -45,8 +46,11 @@ export const Card = ({
                 style={{
                     scale,
                     top: `calc(-5vh + ${i * 25}px)`,
-                    background: 'rgba(10, 6, 25, 0.85)',
-                    backdropFilter: 'blur(18px)',
+                    // Was rgba(…,0.85) + backdrop-filter: blur(18px). Re-blurring the
+                    // backdrop of five scaling cards every scroll frame was the
+                    // heaviest paint on the page; this pre-mixed fill looks the same.
+                    background:
+                        'radial-gradient(ellipse 80% 70% at 50% 45%, rgba(13,8,28,0.97), rgba(10,7,23,0.97))',
                     borderWidth: '1px',
                     borderStyle: 'solid',
                     borderColor: 'rgba(139,92,246,0.18)',
@@ -57,7 +61,9 @@ export const Card = ({
                     borderColor: '#7C3AED',
                     transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] },
                 }}
-                className="relative h-[450px] w-[90%] md:w-[70%] p-8 flex flex-col md:flex-row gap-8 shadow-2xl overflow-hidden"
+                // Mobile: height follows content (was a fixed 450px that pushed the
+                // photo out of the card). Desktop: unchanged 450px split layout.
+                className="relative w-[90%] md:w-[70%] max-h-[88svh] md:max-h-none md:h-[450px] p-6 md:p-8 flex flex-col md:flex-row gap-5 md:gap-8 shadow-2xl overflow-hidden"
             >
                 {/* Purple accent bar — absolute so it doesn't affect layout */}
                 <div
@@ -71,29 +77,34 @@ export const Card = ({
                 />
 
                 {/* Left: title + description */}
-                <div className="flex flex-col flex-1 justify-center z-10">
-                    <h2
-                        className="text-3xl md:text-4xl mb-4 font-display font-light tracking-tight"
+                <div className="flex flex-col flex-1 justify-center z-10 min-h-0">
+                    <h3
+                        className="text-2xl md:text-4xl mb-3 md:mb-4 font-display font-light tracking-tight"
                         style={{ color: '#E5E7EB' }}
                     >
                         {title}
-                    </h2>
-                    <p style={{ color: '#9CA3AF', lineHeight: 1.6, fontSize: 15 }}>
+                    </h3>
+                    <p
+                        className="text-[14px] md:text-[15px]"
+                        style={{ color: '#9CA3AF', lineHeight: 1.6 }}
+                    >
                         {description}
                     </p>
                 </div>
 
-                {/* Right: image */}
+                {/* Right (desktop) / bottom (mobile): image */}
                 <div
-                    className="relative flex-1 h-[200px] md:h-full overflow-hidden"
+                    className="relative shrink-0 md:shrink md:flex-1 h-[170px] sm:h-[220px] md:h-full overflow-hidden"
                     style={{ borderRadius: 12 }}
                 >
                     <div className="absolute inset-0 z-[1] bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
-                    <motion.div className="w-full h-full" style={{ scale: imageScale }}>
-                        <img
+                    <motion.div className="relative w-full h-full" style={{ scale: imageScale }}>
+                        <Image
                             src={url}
                             alt={title}
-                            className="absolute inset-0 w-full h-full object-cover"
+                            fill
+                            sizes="(max-width: 768px) 90vw, 36vw"
+                            className="object-cover"
                         />
                     </motion.div>
                 </div>

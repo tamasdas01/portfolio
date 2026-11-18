@@ -141,9 +141,9 @@ const ProjectItem = ({
                             <div className="flex items-center gap-4">
                                 {/* Project name → detail page */}
                                 <Link href={`/projects/${project.slug}`}>
-                                    <h4 className={`text-3xl md:text-5xl font-display font-light transition-all ${isMobile ? "text-text-primary" : "text-text-secondary group-hover/item:text-text-primary hover:text-white"}`}>
+                                    <h3 className={`text-3xl md:text-5xl font-display font-light transition-all ${isMobile ? "text-text-primary" : "text-text-secondary group-hover/item:text-text-primary hover:text-white"}`}>
                                         {project.title}
-                                    </h4>
+                                    </h3>
                                 </Link>
 
                                 {/* External link button → project's live website */}
@@ -154,6 +154,7 @@ const ProjectItem = ({
                                         rel="noopener noreferrer"
                                         className="hidden md:flex items-center justify-center w-10 h-10 rounded-full border border-border text-text-tertiary transition-all duration-300 hover:border-accent hover:text-accent hover:scale-110 shrink-0"
                                         title="Visit live project"
+                                        aria-label={`Visit ${project.title} live website`}
                                         onClick={(e) => e.stopPropagation()}
                                     >
                                         <ExternalLink size={18} />
@@ -231,6 +232,7 @@ const ProjectItem = ({
                         <Link
                             href={`/projects/${project.slug}`}
                             className="font-mono text-xs tracking-widest text-text-tertiary uppercase hover:text-accent transition-colors"
+                            aria-label={`View ${project.title} project details`}
                         >
                             View <span className="text-accent">Details</span>
                         </Link>
@@ -252,54 +254,54 @@ export const SelectedWork = () => {
         PLACEHOLDER_WORKS[0].slug
     );
 
-    // Image follows the cursor vertically inside the project list
+    // Image follows the cursor vertically inside the project list.
+    // Listener is only active while the section is on screen, and uses
+    // gsap.quickTo (one reusable tween) instead of a new tween per mousemove.
     useGSAP(
         (_ctx, contextSafe) => {
             if (isMobile) {
                 setSelectedProject(null);
                 return;
             }
+            const container = containerRef.current;
+            const image = imageContainer.current;
+            if (!container || !image) return;
+
+            const yTo = gsap.quickTo(image, "y", { duration: 0.8, ease: "power3.out" });
+            const opacityTo = gsap.quickTo(image, "opacity", { duration: 0.4, ease: "power2.out" });
 
             const handleMouseMove = contextSafe?.((e: globalThis.MouseEvent) => {
-                if (
-                    !containerRef.current ||
-                    !imageContainer.current ||
-                    isMobile
-                )
-                    return;
-
-                const containerRect =
-                    containerRef.current.getBoundingClientRect();
-                const imageRect =
-                    imageContainer.current.getBoundingClientRect();
-
-                const offsetTop = e.clientY - containerRect.y;
-                const yPos = offsetTop - imageRect.height / 2;
-
-                if (
+                const containerRect = container.getBoundingClientRect();
+                const outside =
                     e.clientY < containerRect.top ||
                     e.clientY > containerRect.bottom ||
                     e.clientX < containerRect.left - 50 ||
-                    e.clientX > containerRect.right + 50
-                ) {
-                    return gsap.to(imageContainer.current, {
-                        duration: 0.4,
-                        opacity: 0,
-                        ease: "power2.out",
-                    });
-                }
+                    e.clientX > containerRect.right + 50;
 
-                gsap.to(imageContainer.current, {
-                    y: yPos,
-                    duration: 0.8,
-                    opacity: 1,
-                    ease: "power3.out",
-                });
+                if (outside) {
+                    opacityTo(0);
+                    return;
+                }
+                const offsetTop = e.clientY - containerRect.y;
+                yTo(offsetTop - image.offsetHeight / 2);
+                opacityTo(1);
             }) as EventListener;
 
-            window.addEventListener("mousemove", handleMouseMove);
+            let listening = false;
+            const io = new IntersectionObserver(([entry]) => {
+                if (entry.isIntersecting && !listening) {
+                    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+                    listening = true;
+                } else if (!entry.isIntersecting && listening) {
+                    window.removeEventListener("mousemove", handleMouseMove);
+                    listening = false;
+                    opacityTo(0);
+                }
+            });
+            io.observe(container);
 
             return () => {
+                io.disconnect();
                 window.removeEventListener("mousemove", handleMouseMove);
             };
         },
@@ -321,7 +323,7 @@ export const SelectedWork = () => {
         >
             <div className="mx-auto max-w-6xl relative" ref={containerRef}>
                 <Reveal>
-                    <p
+                    <h2
                         className="font-mono text-sm mb-12"
                         style={{
                             color: "rgba(255,255,255,0.3)",
@@ -329,7 +331,7 @@ export const SelectedWork = () => {
                         }}
                     >
                         Selected Work
-                    </p>
+                    </h2>
                 </Reveal>
 
                 {/* Floating Image Container (Desktop Only) */}
@@ -342,15 +344,14 @@ export const SelectedWork = () => {
                         {PLACEHOLDER_WORKS.map((project) => (
                             <Image
                                 src={project.thumbnail}
-                                alt={project.title}
+                                alt={`${project.title} — project preview`}
                                 fill
-                                sizes="(max-width: 768px) 100vw, 400px"
+                                sizes="(max-width: 1280px) 280px, 400px"
                                 className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${project.slug === selectedProject
                                     ? "opacity-100"
                                     : "opacity-0"
                                     }`}
                                 key={project.slug}
-                                priority
                             />
                         ))}
                     </div>

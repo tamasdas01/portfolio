@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useIntro } from "@/providers/IntroProvider";
 import { useIsMobile } from "@/lib/use-mobile";
@@ -22,10 +22,8 @@ function useTextScramble(
     const rafRef = useRef<number>(0);
 
     useEffect(() => {
-        if (!shouldStart) {
-            setDisplay("");
-            return;
-        }
+        // Starts once (shouldStart only flips false → true).
+        if (!shouldStart) return;
 
         const startTime = performance.now() + delay;
         const chars = target.split("");
@@ -85,17 +83,12 @@ export function HeroIdentity({
     const { isIntroComplete } = useIntro();
     const isMobile = useIsMobile();
     const sectionRef = useRef<HTMLElement>(null);
-    const [entered, setEntered] = useState(false);
-
-    // Trigger entrance after intro completes
-    useEffect(() => {
-        if (!isIntroComplete) return;
-        const timer = setTimeout(() => setEntered(true), 150);
-        return () => clearTimeout(timer);
-    }, [isIntroComplete]);
+    // Entrance starts as soon as the intro begins cross-fading out
+    // (no dead gap between the intro and the hero).
+    const entered = isIntroComplete;
 
     // Text scramble for the name
-    const scrambledName = useTextScramble(name, entered, 1000, 600);
+    const scrambledName = useTextScramble(name, entered, 1000, 450);
 
     // ── Scroll-based parallax + fade (DESKTOP ONLY) ─────────
     const { scrollYProgress } = useScroll({
@@ -106,7 +99,6 @@ export function HeroIdentity({
     const yDesktop = useTransform(scrollYProgress, [0, 1], ["0%", "-30%"]);
     const opacityDesktop = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
     const scaleDesktop = useTransform(scrollYProgress, [0, 0.8], [1, 0.95]);
-    const nameBlur = useTransform(scrollYProgress, [0, 0.5], [0, 6]);
 
     // On mobile: disable all scroll-linked motion values — static display
     const motionStyle = isMobile
@@ -175,19 +167,20 @@ export function HeroIdentity({
                         fontWeight: 700,
                         lineHeight: 1,
                         letterSpacing: "-0.02em",
-                        // Mobile: no scroll-blur filter (kills perf + not visible anyway)
-                        filter: isMobile ? undefined : undefined,
                         textAlign: "center"
                     }}
                 >
-                    {entered ? scrambledName : ""}
+                    {/* Visible: animated "TAMAS". Server HTML always contains the
+                        real name, so crawlers never see an empty <h1>. */}
+                    <span aria-hidden="true">{entered ? scrambledName || name : name}</span>
+                    <span className="sr-only">Tamas Das — Creative Full-Stack Developer in Kolkata, India</span>
                 </motion.h1>
 
                 {/* Horizontal Divider */}
                 <motion.div
                     initial={{ opacity: 0, scaleX: 0 }}
                     animate={entered ? { opacity: 1, scaleX: 1 } : {}}
-                    transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 1.5 }}
+                    transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1], delay: 1.25 }}
                     style={{
                         width: isMobile ? '80px' : '120px',
                         height: '1px',
@@ -200,7 +193,7 @@ export function HeroIdentity({
                 <motion.p
                     initial={{ opacity: 0 }}
                     animate={entered ? { opacity: 1 } : {}}
-                    transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 2 }}
+                    transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 1.55 }}
                     className="mt-4 md:mt-6 px-4 text-center"
                     style={{
                         fontFamily: "var(--font-mono-var), ui-monospace, monospace",
@@ -215,6 +208,9 @@ export function HeroIdentity({
                         maxWidth: isMobile ? "280px" : "auto"
                     }}
                 >
+                    <span className="block mb-1.5" style={{ color: "rgba(255,255,255,0.5)" }}>
+                        Creative full-stack developer · Kolkata, India
+                    </span>
                     Building products from zero to production — independently.
                 </motion.p>
 
@@ -222,7 +218,7 @@ export function HeroIdentity({
                 <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={entered ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 2.4 }}
+                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 1.85 }}
                     className="mt-6 md:mt-8 flex flex-col items-center gap-4"
                 >
                     {/* Status pill / Mail Link */}
@@ -288,7 +284,7 @@ export function HeroIdentity({
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={entered ? { opacity: 1 } : {}}
-                    transition={{ duration: 1, delay: 2.8 }}
+                    transition={{ duration: 1, delay: 2.2 }}
                     className={`absolute left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 ${
                         // Mobile: bring indicator up so it's not clipped below viewport
                         isMobile ? "-bottom-16" : "-bottom-24"
@@ -323,24 +319,4 @@ export function HeroIdentity({
             />
         </section>
     );
-}
-
-// ─────────────────────────────────────────────────────────────
-// Helper — convert MotionValue<number> to CSS filter string
-// Framer Motion style prop doesn't support motion values inside
-// template strings, so we do it the React way.
-// ─────────────────────────────────────────────────────────────
-
-function useTransformToFilter(blurValue: ReturnType<typeof useTransform<number, number>>) {
-    // We use a state to bridge the motion value to a CSS string.
-    const [filter, setFilter] = useState("blur(0px)");
-
-    useEffect(() => {
-        const unsubscribe = blurValue.on("change", (v) => {
-            setFilter(`blur(${v}px)`);
-        });
-        return unsubscribe;
-    }, [blurValue]);
-
-    return filter;
 }

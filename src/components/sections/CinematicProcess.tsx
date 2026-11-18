@@ -22,28 +22,44 @@ export function CinematicProcess() {
         // Respect the user's reduced-motion preference — skip the parallax entirely
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-        const onMove = (e: MouseEvent) => {
-            target.current.x = (e.clientX / window.innerWidth - 0.5) * 16;
-            target.current.y = (e.clientY / window.innerHeight - 0.5) * 16;
-        };
-
+        // The loop only runs while the panel is on screen AND still easing
+        // toward the cursor — it parks itself once settled (zero idle cost).
+        let inView = false;
         const tick = () => {
-            current.current.x += (target.current.x - current.current.x) * 0.08;
-            current.current.y += (target.current.y - current.current.y) * 0.08;
+            const dx = target.current.x - current.current.x;
+            const dy = target.current.y - current.current.y;
+            current.current.x += dx * 0.08;
+            current.current.y += dy * 0.08;
 
             if (parallaxRef.current) {
                 parallaxRef.current.style.transform =
                     `translate3d(${current.current.x}px,${current.current.y}px,0)`;
             }
-            rafId.current = requestAnimationFrame(tick);
+            if (Math.abs(dx) > 0.05 || Math.abs(dy) > 0.05) {
+                rafId.current = requestAnimationFrame(tick);
+            } else {
+                rafId.current = 0;
+            }
         };
 
+        const onMove = (e: MouseEvent) => {
+            target.current.x = (e.clientX / window.innerWidth - 0.5) * 16;
+            target.current.y = (e.clientY / window.innerHeight - 0.5) * 16;
+            if (inView && !rafId.current) rafId.current = requestAnimationFrame(tick);
+        };
+
+        const io = new IntersectionObserver(([entry]) => {
+            inView = entry.isIntersecting;
+        });
+        if (parallaxRef.current) io.observe(parallaxRef.current);
+
         window.addEventListener("mousemove", onMove, { passive: true });
-        rafId.current = requestAnimationFrame(tick);
 
         return () => {
+            io.disconnect();
             window.removeEventListener("mousemove", onMove);
             cancelAnimationFrame(rafId.current);
+            rafId.current = 0;
         };
     }, [isMobile]);
 
@@ -60,9 +76,9 @@ export function CinematicProcess() {
         return (
             <section id="process" className="relative bg-black">
                 <div className="px-6 pt-20 pb-10">
-                    <p className="font-mono text-xs uppercase tracking-[0.3em] text-white/20">
+                    <h2 className="font-mono text-xs uppercase tracking-[0.3em] text-white/20">
                         Process
-                    </p>
+                    </h2>
                 </div>
                 <div className="py-10" style={{ background: '#0e0e0e' }}>
                     <Accordion05 />
@@ -73,7 +89,7 @@ export function CinematicProcess() {
 
     // ── Desktop split-screen ──────────────────────────────────────
     return (
-        <section id="process" className="relative flex min-h-screen w-full" style={{ background: '#0a0a0a' }}>
+        <section id="process" data-opaque-section className="relative flex min-h-screen w-full" style={{ background: '#0a0a0a' }}>
             {/* Left: Sticky Panel (40%) */}
             <div className="sticky top-0 h-screen w-[40%] bg-black flex flex-col justify-center px-12 overflow-hidden border-r border-white/5">
                 {/* Subtle radial glow – pure CSS, zero cost */}
@@ -124,7 +140,7 @@ export function CinematicProcess() {
                     {/* Cycling role text */}
                     <div className="h-14 overflow-hidden relative">
                         <AnimatePresence mode="wait">
-                            <motion.h3
+                            <motion.p
                                 key={currentRole}
                                 initial={{ y: 16, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
@@ -136,7 +152,7 @@ export function CinematicProcess() {
                                 className="text-2xl md:text-3xl font-light tracking-[0.12em] text-white/50 uppercase"
                             >
                                 {ROLES[currentRole]}
-                            </motion.h3>
+                            </motion.p>
                         </AnimatePresence>
                     </div>
 

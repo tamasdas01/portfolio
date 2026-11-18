@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { useIsMobile } from "@/lib/use-mobile";
 
 // ─────────────────────────────────────────────────────────────
@@ -17,7 +17,18 @@ import { useIsMobile } from "@/lib/use-mobile";
 const LERP = 0.11; // lower = more lag
 
 export function CustomCursor() {
-  const isMobile = useIsMobile();
+  const isMobileWidth = useIsMobile();
+  // Only for real mouse/trackpad users — touch tablets wider than 768px
+  // (e.g. iPad landscape) would otherwise lose their cursor to a stuck dot.
+  const [finePointer, setFinePointer] = useState(false);
+  useEffect(() => {
+    const mql = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const update = () => setFinePointer(mql.matches);
+    update();
+    mql.addEventListener("change", update);
+    return () => mql.removeEventListener("change", update);
+  }, []);
+  const isMobile = isMobileWidth || !finePointer;
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
 
@@ -27,15 +38,22 @@ export function CustomCursor() {
   const ry = useRef(0);
   const rafId = useRef<number>(0);
 
+  // LERP loop runs only while the ring is catching up, then parks (zero idle cost).
   const animate = useCallback(() => {
-    rx.current += (mx.current - rx.current) * LERP;
-    ry.current += (my.current - ry.current) * LERP;
+    const dx = mx.current - rx.current;
+    const dy = my.current - ry.current;
+    rx.current += dx * LERP;
+    ry.current += dy * LERP;
 
     if (ringRef.current) {
       ringRef.current.style.transform = `translate(${rx.current}px, ${ry.current}px) translate(-50%, -50%)`;
     }
 
-    rafId.current = requestAnimationFrame(animate);
+    if (Math.abs(dx) > 0.1 || Math.abs(dy) > 0.1) {
+      rafId.current = requestAnimationFrame(animate);
+    } else {
+      rafId.current = 0;
+    }
   }, []);
 
   useEffect(() => {
@@ -45,14 +63,21 @@ export function CustomCursor() {
     const ring = ringRef.current;
     if (!dot || !ring) return;
 
-    // Kick off the LERP animation loop
-    rafId.current = requestAnimationFrame(animate);
-
-    // Dot follows instantly
+    // Dot follows instantly; ring LERPs behind
+    let shown = false;
     const onMove = (e: MouseEvent) => {
       mx.current = e.clientX;
       my.current = e.clientY;
       dot.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+      if (!shown) {
+        // Start at the pointer (not the 0,0 corner) on the first move.
+        shown = true;
+        rx.current = e.clientX;
+        ry.current = e.clientY;
+        dot.style.opacity = "1";
+        ring.style.opacity = "1";
+      }
+      if (!rafId.current) rafId.current = requestAnimationFrame(animate);
     };
 
     // Interactive targets — ring expands + turns purple
@@ -78,6 +103,7 @@ export function CustomCursor() {
 
     return () => {
       cancelAnimationFrame(rafId.current);
+      rafId.current = 0;
       document.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseover", onOverDelegate);
       document.removeEventListener("mouseout", onOutDelegate);
@@ -103,6 +129,7 @@ export function CustomCursor() {
           borderRadius: "50%",
           background: "#A78BFA",
           pointerEvents: "none",
+          opacity: 0,
           zIndex: 99999,
           transform: "translate(-50%, -50%)",
           willChange: "transform",
@@ -125,6 +152,7 @@ export function CustomCursor() {
           borderRadius: "50%",
           border: "1.5px solid rgba(139,92,246,0.55)",
           pointerEvents: "none",
+          opacity: 0,
           zIndex: 99998,
           transform: "translate(-50%, -50%)",
           willChange: "transform",

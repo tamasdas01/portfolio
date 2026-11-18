@@ -1,7 +1,6 @@
 "use client";
 
 import { Reveal } from "./Reveal";
-import { SITE } from "@/lib/constants";
 
 export function Footer() {
     return (
@@ -11,6 +10,8 @@ export function Footer() {
                     <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
                         <p className="font-mono text-sm text-text-secondary flex flex-wrap items-center gap-x-3 gap-y-2">
                             <span>© 2026 TAMAS DAS</span>
+                            <span className="text-white/10">·</span>
+                            <span>Creative Full-Stack Developer, Kolkata, India</span>
                             <span className="text-white/10">·</span>
                             <a 
                                 href="https://mail.google.com/mail/?view=cm&fs=1&to=das.tamas13@gmail.com" 

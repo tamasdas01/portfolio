@@ -1,23 +1,22 @@
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
+
+const QUERY = "(max-width: 768px)";
+
+function subscribe(onChange: () => void) {
+    const mql = window.matchMedia(QUERY);
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+}
 
 /**
  * Returns true when the viewport width is ≤ 768px (mobile).
- * SSR-safe: defaults to false on the server to avoid hydration mismatch.
- * Re-evaluates on window resize.
+ * SSR-safe: the server snapshot is `false`, so hydration matches,
+ * then React re-renders with the real value. Re-evaluates on resize.
  */
 export function useIsMobile(): boolean {
-    const [isMobile, setIsMobile] = useState(false);
-
-    useEffect(() => {
-        const mql = window.matchMedia("(max-width: 768px)");
-        const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-
-        // Set initial value
-        setIsMobile(mql.matches);
-
-        mql.addEventListener("change", handler);
-        return () => mql.removeEventListener("change", handler);
-    }, []);
-
-    return isMobile;
+    return useSyncExternalStore(
+        subscribe,
+        () => window.matchMedia(QUERY).matches,
+        () => false
+    );
 }

@@ -1,9 +1,18 @@
 "use client";
 
 import { useRef } from "react";
+import dynamic from "next/dynamic";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useIsMobile } from "@/lib/use-mobile";
-import { TechGlobe } from "@/components/ui/TechGlobe";
+
+// three.js globe is code-split; the placeholder reserves the exact same box.
+const TechGlobe = dynamic(
+    () => import("@/components/ui/TechGlobe").then((m) => m.TechGlobe),
+    {
+        ssr: false,
+        loading: () => <div className="relative w-full h-[60vh] md:h-screen" aria-hidden="true" />,
+    }
+);
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -62,6 +71,8 @@ export function StatementSection() {
         <section
             ref={sectionRef}
             id="toolkit"
+            data-opaque-section
+            aria-label="Skills and toolkit"
             className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black"
         >
             <motion.div
@@ -70,12 +81,12 @@ export function StatementSection() {
             >
                 {/* ── Left Side (Text + Skills) ─────────────────────── */}
                 <div className="flex h-full flex-col justify-center px-8 md:px-16 pt-32 md:pt-0 pb-12 md:pb-0 z-[2]">
-                    <motion.div
+                    <motion.h2
                         initial={{ opacity: 0, x: -40 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true, margin: "-80px" }}
                         transition={{ duration: 0.8, ease: EASE }}
-                        className="flex flex-col gap-2 select-none"
+                        className="flex flex-col gap-2 select-none font-normal"
                     >
                         {/* Headline — reduced size */}
                         <motion.span
@@ -126,7 +137,7 @@ export function StatementSection() {
                         >
                             experiences.
                         </motion.span>
-                    </motion.div>
+                    </motion.h2>
 
                     {/* ── Skill Categories ─────────────────────── */}
                     <motion.div
@@ -141,17 +152,17 @@ export function StatementSection() {
                                 key={cat.label}
                                 className="rounded-xl px-4 py-3"
                                 style={{
+                                    // (backdrop blur removed — this sits on solid black, so it was invisible but costly)
                                     background: "rgba(255,255,255,0.03)",
-                                    backdropFilter: "blur(12px)",
                                     border: "1px solid rgba(255,255,255,0.06)",
                                 }}
                             >
-                                <div
+                                <h3
                                     className="font-mono text-[0.6rem] tracking-[0.2em] uppercase mb-2 font-medium"
                                     style={{ color: "rgba(139,92,246,0.8)" }}
                                 >
                                     {cat.label}
-                                </div>
+                                </h3>
                                 <div className="flex flex-wrap gap-1.5">
                                     {cat.items.map((item) => (
                                         <span

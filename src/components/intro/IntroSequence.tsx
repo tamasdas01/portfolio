@@ -1,17 +1,19 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useIntro } from "@/providers/IntroProvider";
 import { MultilingualIntro } from "@/components/intro/MultilingualIntro";
 
 export function IntroSequence() {
-    const { isIntroComplete, completeIntro } = useIntro();
+    const { completeIntro } = useIntro();
+    const [mounted, setMounted] = useState(true);
 
-    const handleComplete = useCallback(() => {
-        completeIntro();
-    }, [completeIntro]);
+    // onReveal fires as the overlay *starts* fading, so the hero entrance
+    // overlaps the cross-fade instead of waiting on a black screen.
+    const handleReveal = useCallback(() => completeIntro(), [completeIntro]);
+    const handleDone = useCallback(() => setMounted(false), []);
 
-    if (isIntroComplete) return null;
+    if (!mounted) return null;
 
-    return <MultilingualIntro onComplete={handleComplete} />;
+    return <MultilingualIntro onReveal={handleReveal} onDone={handleDone} />;
 }

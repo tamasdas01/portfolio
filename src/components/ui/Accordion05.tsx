@@ -128,14 +128,15 @@ export function Accordion05() {
                                 text-white/[0.15] data-[state=open]:text-white
                                 [&>svg]:hidden`}
                         >
-                            <div className="flex flex-1 items-start gap-4">
-                                <p className="text-xs text-white/25 mt-1 md:mt-2">
+                            {/* Radix wraps this trigger in an <h3>, so the title is already a heading. */}
+                            <span className="flex flex-1 items-start gap-4">
+                                <span className="block text-xs text-white/25 mt-1 md:mt-2">
                                     {item.id}
-                                </p>
-                                <h1 className="uppercase relative text-3xl md:text-5xl font-light tracking-tight">
+                                </span>
+                                <span className="block uppercase relative text-3xl md:text-5xl font-light tracking-tight">
                                     {item.title}
-                                </h1>
-                            </div>
+                                </span>
+                            </span>
                         </AccordionTrigger>
 
                         <AccordionContent className="text-white/40 pb-6 pl-6 md:px-20 text-sm md:text-base leading-relaxed">

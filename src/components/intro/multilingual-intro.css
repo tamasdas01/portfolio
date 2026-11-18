@@ -2,6 +2,12 @@
    Multilingual Intro — Styles
    ══════════════════════════════════════════════════════════════ */
 
+/* Repeat visit in the same session: hidden at first paint
+   (data-intro-seen is set by the inline boot script in <head>). */
+html[data-intro-seen] .ml-intro {
+  display: none;
+}
+
 /* ── Full-screen overlay ── */
 .ml-intro {
   position: fixed;
@@ -13,6 +19,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  contain: strict;
 }
 
 /* ── Subtle noise texture ── */
@@ -30,6 +37,8 @@
   position: absolute;
   width: 500px;
   height: 500px;
+  max-width: 120vw;
+  max-height: 120vw;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(168, 85, 247, 0.08) 0%, transparent 65%);
   pointer-events: none;
@@ -58,16 +67,36 @@
   flex-wrap: nowrap;
 }
 
-/* ── Individual letter ── */
-.ml-intro__letter {
+/* ── Individual letter / glyph ── */
+.ml-intro__letter,
+.ml-intro__glyph {
   display: inline-block;
   font-family: var(--font-display-var), Georgia, serif;
   font-size: clamp(3.5rem, 9vw, 7.5rem);
   color: #ffffff;
   line-height: 1;
-  will-change: transform, opacity;
   opacity: 0;
-  transform: translateY(28px);
+}
+
+.ml-intro__letter {
+  will-change: opacity;
+}
+
+/* Glyph = two shards stacked; each clipped to one side of a random crack */
+.ml-intro__glyph {
+  position: relative;
+  will-change: transform, opacity;
+}
+
+.ml-intro__shard {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.ml-intro__shard--abs {
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 /* Arabic — keep as single unit; slightly smaller */
@@ -90,72 +119,95 @@
 }
 
 /* ══════════════════════════════════════════════════════════════
-   WATER SURFACE
+   BLACK WATER
    ══════════════════════════════════════════════════════════════ */
+
+/* Water body — starts at the surface line (top set in JS).
+   Translucent at the surface, ink-black a little deeper, so
+   sinking shards dim and dissolve instead of being cut off. */
 .ml-intro__water {
   position: absolute;
   left: 0;
-  width: 100%;
-  height: 3px;
-  z-index: 10;
+  right: 0;
+  bottom: 0;
+  top: 72%;
+  z-index: 4;
   opacity: 0;
-  bottom: 28%;
-  overflow: visible;
   pointer-events: none;
+  /* Dense black-purple liquid: violet glow just under the surface,
+     deepening to ink. Translucent enough at the top to show the
+     reflection, opaque enough below to swallow sinking shards. */
+  background:
+    radial-gradient(ellipse 55% 140px at 50% 0%, rgba(147, 51, 234, 0.38), transparent 75%),
+    radial-gradient(ellipse 90% 60% at 50% 30%, rgba(76, 29, 149, 0.30), transparent 80%),
+    linear-gradient(180deg,
+      rgba(49, 16, 102, 0.80) 0px,
+      rgba(26, 7, 56, 0.94) 60px,
+      rgba(10, 2, 24, 1) 190px,
+      #020006 100%);
 }
 
-/* Glowing purple gradient line */
+/* Soft violet haze sitting on the surface line */
 .ml-intro__water::before {
   content: '';
   position: absolute;
-  left: 5%;
-  width: 90%;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(168, 85, 247, 0.2) 15%,
-    rgba(168, 85, 247, 0.65) 35%,
-    rgba(190, 130, 255, 0.9) 50%,
-    rgba(168, 85, 247, 0.65) 65%,
-    rgba(168, 85, 247, 0.2) 85%,
-    transparent 100%
-  );
-  border-radius: 2px;
-  top: 0;
-}
-
-/* Underwater glow beneath the line */
-.ml-intro__water::after {
-  content: '';
-  position: absolute;
-  left: 10%;
-  width: 80%;
-  height: 60px;
-  background: linear-gradient(180deg, rgba(100, 40, 180, 0.13) 0%, transparent 100%);
-  top: 2px;
-}
-
-/* ── SVG ripple layer ── */
-.ml-intro__ripple-svg {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  overflow: visible;
+  left: 8%;
+  right: 8%;
+  top: -18px;
+  height: 36px;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(168, 85, 247, 0.28), transparent 70%);
   pointer-events: none;
 }
 
-/* ── Sink mask — covers everything below water ── */
-.ml-intro__mask {
+/* Reflection — clipped at the surface, fades with depth */
+.ml-intro__reflection-wrap {
   position: absolute;
   left: 0;
-  width: 100%;
-  z-index: 9;
-  pointer-events: none;
-  background: #000000;
+  right: 0;
   bottom: 0;
+  top: 72%;
+  z-index: 5;
+  overflow: hidden;
   opacity: 0;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.35) 90px, transparent 170px);
+  mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.35) 90px, transparent 170px);
+}
+
+.ml-intro__reflection {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  padding: 0 2rem;
+  transform: scaleY(-1);
+  opacity: 0.26;
+  filter: blur(0.6px);
+}
+
+/* Real liquid wobble on capable devices; plain soft mirror on low-end. */
+html:not([data-perf="low"]) .ml-intro__reflection {
+  filter: url(#ml-water-distort);
+}
+
+/* ── Surface line / ripples / droplets ── */
+.ml-intro__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 6;
+  pointer-events: none;
+}
+
+.ml-intro__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
 }
 
 /* ── Progress bar at bottom ── */
@@ -165,5 +217,6 @@
   left: 0;
   height: 1.5px;
   width: 0%;
+  z-index: 7;
   background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.45), transparent);
 }

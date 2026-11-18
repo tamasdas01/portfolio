@@ -1,30 +1,29 @@
 import type { MetadataRoute } from "next";
 import { PLACEHOLDER_WORKS } from "@/lib/projects";
+import { PERSON, SITE_URL, absoluteUrl } from "@/lib/site";
 
-const BASE_URL = "https://portfolio-tamas.vercel.app";
+// Bump when homepage content changes.
+const HOME_LAST_MODIFIED = "2026-11-18";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  // Static routes
-  const staticRoutes: MetadataRoute.Sitemap = [
-    {
-      url: BASE_URL,
-      lastModified: new Date("2026-05-04"), // update this when homepage content changes
-      changeFrequency: "monthly",
-      priority: 1.0,
-    },
-  ];
+    const home: MetadataRoute.Sitemap[number] = {
+        url: SITE_URL,
+        lastModified: new Date(HOME_LAST_MODIFIED),
+        changeFrequency: "monthly",
+        priority: 1.0,
+        // Image sitemap entries help Google Images associate these with the page.
+        images: [absoluteUrl(PERSON.image), ...PLACEHOLDER_WORKS.map((p) => absoluteUrl(p.thumbnail))],
+    };
 
-  // Dynamic project routes — automatically includes every project in PLACEHOLDER_WORKS.
-  // When you add a new project to projects.ts, it appears here AND gets a static page
-  // via generateStaticParams() in [slug]/page.tsx — no extra work needed.
-  const projectRoutes: MetadataRoute.Sitemap = PLACEHOLDER_WORKS.map(
-    (project) => ({
-      url: `${BASE_URL}/projects/${project.slug}`,
-      lastModified: new Date(project.lastModified), // set per-project in projects.ts
-      changeFrequency: "monthly" as const,
-      priority: 0.8,
-    })
-  );
+    // Every project in projects.ts gets a static page (generateStaticParams)
+    // and an entry here automatically.
+    const projects: MetadataRoute.Sitemap = PLACEHOLDER_WORKS.map((project) => ({
+        url: absoluteUrl(`/projects/${project.slug}`),
+        lastModified: new Date(project.lastModified),
+        changeFrequency: "monthly" as const,
+        priority: 0.8,
+        images: project.images.map((img) => absoluteUrl(img.src)),
+    }));
 
-  return [...staticRoutes, ...projectRoutes];
+    return [home, ...projects];
 }
