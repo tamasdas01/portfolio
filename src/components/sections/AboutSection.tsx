@@ -17,19 +17,16 @@ const EDUCATION = [
         level: "B.Tech",
         institution: "Guru Nanak Institute of Technology (MAKAUT)",
         focus: "Computer Science & Engineering",
-        result: "7.97 CGPA",
     },
     {
         level: "XII (ISC)",
         institution: "International Public School",
         focus: "Science Stream",
-        result: "80%",
     },
     {
         level: "X (ICSE)",
         institution: "St. Joseph and Mary's School",
         focus: "Computer Science",
-        result: "88%",
     },
 ];
 
@@ -179,7 +176,7 @@ export const AboutSection = () => {
                             Currently seeking full-time software engineering roles starting in 2026.
                         </p>
                         <a
-                            href="/resume.pdf?v=2"
+                            href="/resume.pdf?v=3"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-2 font-mono text-xs text-accent/70 hover:text-accent transition-colors underline underline-offset-4"
@@ -252,9 +249,6 @@ export const AboutSection = () => {
                                         <div className="font-mono text-xs text-text-tertiary mt-0.5">
                                             {edu.focus}
                                         </div>
-                                    </div>
-                                    <div className="font-mono text-sm font-medium text-accent shrink-0">
-                                        {edu.result}
                                     </div>
                                 </div>
                             ))}

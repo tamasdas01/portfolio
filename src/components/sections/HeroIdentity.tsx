@@ -255,7 +255,7 @@ export function HeroIdentity({
                     {/* View Resume button */}
                     <MagneticButton strength={0.38}>
                     <a
-                        href="/resume.pdf?v=2"
+                        href="/resume.pdf?v=3"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="group flex items-center gap-2 px-5 py-2 rounded-full transition-all duration-300"
